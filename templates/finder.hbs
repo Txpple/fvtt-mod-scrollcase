@@ -1,0 +1,20 @@
+<div class="hdt-finder">
+  <label class="hdt-search hdt-finder-box">
+    <i class="fa-solid fa-magnifying-glass" inert></i>
+    <input type="search" name="find" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="handouts-finder-results" aria-autocomplete="list"
+      placeholder="{{#if isGM}}{{localize 'fvtt-mod-handouts.finder.placeholder'}}{{else}}{{localize 'fvtt-mod-handouts.finder.placeholderPlayer'}}{{/if}}"
+      aria-label="{{localize 'fvtt-mod-handouts.finder.title'}}">
+    <kbd>Esc</kbd>
+  </label>
+  <ul class="hdt-results" id="handouts-finder-results" role="listbox"></ul>
+  <div class="hdt-finder-foot">
+    <span><kbd>↑</kbd> <kbd>↓</kbd> {{localize "fvtt-mod-handouts.finder.move"}}</span>
+    {{#if isGM}}
+    <span><kbd>Enter</kbd> {{localize "fvtt-mod-handouts.finder.enterShow"}}</span>
+    <span><kbd>Shift</kbd> <kbd>Enter</kbd> {{localize "fvtt-mod-handouts.finder.shiftEnter"}}</span>
+    {{else}}
+    <span><kbd>Enter</kbd> {{localize "fvtt-mod-handouts.finder.enterOpen"}}</span>
+    {{/if}}
+    <span><kbd>Ctrl</kbd> <kbd>Enter</kbd> {{localize "fvtt-mod-handouts.finder.ctrlEnter"}}</span>
+  </div>
+</div>

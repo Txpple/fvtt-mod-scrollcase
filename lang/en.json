@@ -1,0 +1,246 @@
+{
+  "fvtt-mod-handouts": {
+    "settings": {
+      "enabled": {
+        "name": "Enabled",
+        "hint": "Off leaves the journal exactly as Foundry has it: the Journal button opens the Journal tab, and nothing of the module's is drawn."
+      },
+      "classic": {
+        "name": "Classic Mode",
+        "hint": "On this client, the Journal button opens Foundry's own Journal tab instead of Handouts. The Handouts window has a Classic Mode button, and the Journal tab a Handouts button to come back."
+      },
+      "showKeeps": {
+        "name": "Show keeps it visible",
+        "hint": "When the GM shows a page, it is also made visible to the players it was shown to, so they can open it again from their Handouts. Off: Show only flashes it, and who can open the page is left as it is. The Show options choose either way each time."
+      },
+      "assetFolders": {
+        "name": "Asset folders",
+        "hint": "Where Not in a journal looks for pictures no journal page uses yet: folders relative to Data, one per line or separated by commas. Blank: the world's assets/handouts, assets/journal, assets/maps and assets/portraits."
+      },
+      "handoutsJournal": {
+        "name": "Handouts journal",
+        "hint": "The journal Add to the Handouts journal puts a picture in, made on first use (GM only)."
+      }
+    },
+    "keys": {
+      "finder": {
+        "name": "Find a handout",
+        "hint": "Opens the finder: type a word, pick with the arrows, Enter shows it to everyone (a player's Enter opens it)."
+      }
+    },
+    "library": {
+      "title": "Handouts"
+    },
+    "search": {
+      "label": "Search handouts",
+      "placeholder": "Search names, text, files, journals…",
+      "more": "{n} more outside this view: search everything"
+    },
+    "type": {
+      "label": "Type",
+      "all": "All",
+      "image": "With pictures",
+      "text": "Text",
+      "pdf": "PDF",
+      "video": "Video"
+    },
+    "size": {
+      "label": "Card size",
+      "s": "S",
+      "m": "M",
+      "l": "L",
+      "sAria": "Small cards",
+      "mAria": "Medium cards",
+      "lAria": "Large cards"
+    },
+    "classic": {
+      "button": "Classic Mode",
+      "hint": "Foundry's own journal, on this client. The Journal tab then has a Handouts button to come back.",
+      "on": "Classic Mode: the Journal button opens Foundry's own journal on this client. Its Handouts button brings this window back.",
+      "back": "Handouts"
+    },
+    "rail": {
+      "label": "Views and journals",
+      "handouts": "Handouts",
+      "journals": "Journals"
+    },
+    "view": {
+      "all": "All",
+      "visible": "Visible to players",
+      "gm": "GM only",
+      "recent": "Recently shown",
+      "pinned": "Pinned",
+      "loose": "Not in a journal",
+      "unseen": "New"
+    },
+    "count": {
+      "pages": "{n} pages",
+      "pagesOne": "1 page",
+      "files": "{n} pictures",
+      "filesOne": "1 picture",
+      "matching": "{n} matching “{q}”",
+      "matchingFiles": "{pages}, plus {files} not in a journal, matching “{q}”"
+    },
+    "files": {
+      "loading": "Reading the asset folders…",
+      "rescan": "Read the asset folders again"
+    },
+    "badge": {
+      "new": "New",
+      "file": "Not in a journal",
+      "all": "All players",
+      "gm": "GM only",
+      "some": "{n} players",
+      "visible": "Visible",
+      "markAll": "Mark all seen"
+    },
+    "kind": {
+      "image": "Image",
+      "video": "Video",
+      "pdf": "PDF",
+      "text": "Text"
+    },
+    "show": {
+      "button": "Show",
+      "options": "Show options",
+      "everyone": "everyone",
+      "allPlayers": "all players",
+      "revealed": "“{name}” is now visible to {whom}.",
+      "revealedFinder": "“{name}” is now visible to all players. Undo is at the top of the Handouts window.",
+      "undo": "Undo",
+      "undoHint": "Put who can open it back as it was before the Show (the popout already on their screens stays)",
+      "undone": "{name} is back as it was before the Show.",
+      "picture": "Show the picture",
+      "pictureHint": "Show only the page's picture, as an image popout; who can open the page is left as it is",
+      "nobodyOnline": "No player is connected to see {name} now.",
+      "notOwner": "Only an owner of the page can show it.",
+      "toYou": "shown to you",
+      "as": {
+        "show": "Show",
+        "reveal": "Reveal",
+        "add": "Add & show"
+      },
+      "hint": {
+        "show": "Show to everyone connected",
+        "reveal": "Make it visible to every player, then show it to everyone connected",
+        "add": "Add it to the Handouts journal, visible to every player, and show it to everyone connected"
+      },
+      "everyoneAs": {
+        "show": "Show to everyone",
+        "reveal": "Reveal and show to everyone",
+        "add": "Add and show to everyone"
+      },
+      "undoChanged": "{name} has changed since the Show, so it was left as it is now.",
+      "dismiss": "Dismiss"
+    },
+    "error": {
+      "show": "Showing {name} failed; the console has the reason.",
+      "write": "That change could not be written; the console has the reason."
+    },
+    "empty": {
+      "search": "Nothing here matches. Try a file name, a section or a word from the text.",
+      "gm": {
+        "all": "This world has no journal pages yet.",
+        "visible": "No page is visible to the players yet. Show one, or light a player under Players can see.",
+        "gm": "Every page is visible to the players.",
+        "recent": "Nothing shown from this browser yet.",
+        "pinned": "Nothing pinned. Drag a card here, or press Pin in its panel.",
+        "loose": "Every picture in the asset folders is in a journal.",
+        "journal": "No pages here."
+      },
+      "player": {
+        "recent": "Nothing shown to you yet. What the GM shows you lands here.",
+        "unseen": "Nothing new.",
+        "all": "Nothing here yet. What the GM shows you lands here.",
+        "pinned": "Nothing pinned.",
+        "journal": "No pages here."
+      },
+      "searchHere": "Nothing in this view matches “{q}”."
+    },
+    "detail": {
+      "where": "Where it lives",
+      "section": "Section",
+      "canSee": "Players can see",
+      "fileNote": "A picture not in a journal: no player can open it again until it is added to the Handouts journal. Show still sends it as an image popout.",
+      "noPlayers": "This world has no players yet.",
+      "everyone": "Everyone",
+      "canSeeNote": "Highlighted players can open it again from their Handouts.",
+      "lastShown": "Last shown from this browser",
+      "fileLine": "A picture not in a journal yet",
+      "pageLine": "{kind} page in {journal}",
+      "onNoPage": "Not in a journal: {folder}",
+      "shownLine": "{when} · to {to}",
+      "notShown": "Not shown from this browser",
+      "openJournal": "Open in journal",
+      "copyLink": "Copy link",
+      "copied": "Link copied.",
+      "look": "Look at it",
+      "again": "Show again to {to}"
+    },
+    "pin": {
+      "hint": "Pinned handouts are kept in this browser, for the next session's shortlist.",
+      "on": "Pinned",
+      "off": "Pin",
+      "unpin": "Unpin"
+    },
+    "keep": {
+      "button": "Add to the Handouts journal",
+      "hint": "Make it an image page in the Handouts journal, GM only until shown",
+      "done": "{name} is a page in {journal} now, GM only until shown.",
+      "defaultJournal": "Handouts"
+    },
+    "section": {
+      "none": "No section",
+      "unnamed": "(unnamed)",
+      "new": "New section…",
+      "newTitle": "New section",
+      "name": "Name",
+      "create": "Create"
+    },
+    "opts": {
+      "to": "To",
+      "everyone": "Everyone ({n} connected)",
+      "everyoneNone": "Everyone (no one connected)",
+      "keep": "Keep it in their Handouts",
+      "keepFile": "Add it to the Handouts journal",
+      "keepOn": "They can open it again from their Handouts.",
+      "keepOff": "They see it now; who can open it later is left as it is.",
+      "keepFileOn": "An image page is made in the Handouts journal, visible to them.",
+      "keepFileOff": "An image popout only: no page, nothing written.",
+      "pictureOnly": "Just the picture",
+      "title": "Title on the popout",
+      "caption": "Caption",
+      "nobody": "Pick at least one player, or Everyone."
+    },
+    "drop": {
+      "alreadyPinned": "Already pinned.",
+      "filed": "{name} filed under {section}.",
+      "unfiled": "{name} taken out of its section."
+    },
+    "why": {
+      "caption": "in caption",
+      "section": "in its section",
+      "journal": "in its journal",
+      "folder": "in its folder",
+      "file": "in file name",
+      "text": "in text"
+    },
+    "finder": {
+      "title": "Find a handout",
+      "placeholder": "A name, a section, a file, a word from the text",
+      "placeholderPlayer": "Search what you have been given",
+      "pinned": "Pinned",
+      "recent": "Recently shown",
+      "matches": "{n} matching",
+      "matchesMore": "{n} matching, the first {shown} shown",
+      "move": "move",
+      "enterShow": "show to everyone",
+      "enterReveal": "reveal and show to everyone",
+      "enterOpen": "open it",
+      "shiftEnter": "choose who",
+      "ctrlEnter": "open in journal",
+      "none": "Nothing by that name, section, file or word.",
+      "empty": "Type to search. Pinned and recently shown handouts appear here."
+    }
+  }
+}

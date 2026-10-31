@@ -1,0 +1,1171 @@
+/*
+ * Handouts: the library window, the finder, the directory's way back. Scoped to the module's own
+ * classes; nothing here reaches a stock sheet, the directory or the sidebar.
+ */
+
+/* The `ready` hook appends one of these and reads its flex-direction: the honest question of
+   whether this sheet reached the cascade (v14 bundles module CSS). */
+.handouts-css-probe {
+  display: none;
+  flex-direction: column;
+}
+
+.handouts-library,
+.handouts-finder {
+  --hdt-ground: #1e1b18;
+  --hdt-panel: #26221e;
+  --hdt-card: #2b2723;
+  --hdt-line: #3d3a35;
+  --hdt-ink: #ece6d8;
+  --hdt-ink-2: #c9c3b6;
+  --hdt-ink-3: #a39d90;
+  --hdt-gold: #c9a24a;
+  --hdt-gold-ink: #1b1813;
+  --hdt-green: #62ad72;
+  --hdt-red: #e7a89c;
+  --hdt-blue: #9cc7e8;
+}
+
+.handouts-library .window-content,
+.handouts-finder .window-content {
+  padding: 0;
+  background: var(--hdt-ground);
+  color: var(--hdt-ink);
+  overflow: hidden;
+}
+
+.hdt-root {
+  container: handouts / inline-size;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  font-size: var(--font-size-13, 0.8125rem);
+}
+
+/* -------------------------------------------------- */
+/*  The bar: search, type, size, Classic Mode          */
+/* -------------------------------------------------- */
+
+.hdt-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--hdt-line);
+  flex: none;
+}
+
+.hdt-search {
+  flex: 1 1 18rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.1rem;
+  padding: 0 0.6rem;
+  background: var(--hdt-panel);
+  border: 1px solid var(--hdt-line);
+  border-radius: 4px;
+  color: var(--hdt-ink-3);
+}
+
+.hdt-search:focus-within {
+  border-color: var(--hdt-gold);
+}
+
+.hdt-search input {
+  flex: 1;
+  min-width: 0;
+  text-overflow: ellipsis;
+  height: auto;
+  padding: 0.4rem 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  outline: none;
+  color: var(--hdt-ink);
+  font-size: var(--font-size-13, 0.8125rem);
+}
+
+.hdt-search input::placeholder {
+  color: var(--hdt-ink-3);
+}
+
+.hdt-pills {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.hdt-pill,
+.hdt-classic,
+.hdt-rescan {
+  font-family: inherit;
+  flex: none;
+  width: auto;
+  height: auto;
+  min-height: 1.85rem;
+  margin: 0;
+  padding: 0.2rem 0.6rem;
+  line-height: 1.2;
+  background: var(--hdt-panel);
+  border: 1px solid var(--hdt-line);
+  border-radius: 4px;
+  color: var(--hdt-ink-2);
+  font-size: var(--font-size-12, 0.75rem);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.hdt-pill small {
+  opacity: 0.7;
+  margin-left: 0.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.hdt-pill:hover,
+.hdt-classic:hover,
+.hdt-rescan:hover {
+  color: var(--hdt-ink);
+  border-color: #8a7a55;
+}
+
+.hdt-pill.on {
+  border-color: var(--hdt-gold);
+  background: #332c1f;
+  color: var(--hdt-ink);
+}
+
+.hdt-classic {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+/* -------------------------------------------------- */
+/*  The body: rail, cards, detail                      */
+/* -------------------------------------------------- */
+
+.hdt-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.hdt-rail {
+  flex: 0 0 15rem;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border-right: 1px solid var(--hdt-line);
+  background: rgba(0, 0, 0, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.hdt-key {
+  font-family: var(--font-sans-condensed, "Roboto Condensed", sans-serif);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hdt-ink-3);
+}
+
+.hdt-rail > .hdt-key {
+  margin: 0.6rem 0 0.2rem 0.35rem;
+}
+
+.hdt-rail > .hdt-key:first-child {
+  margin-top: 0.1rem;
+}
+
+.hdt-folder {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.5rem 0.1rem;
+  font-size: var(--font-size-12, 0.75rem);
+  color: var(--hdt-ink-3);
+  min-width: 0;
+}
+
+.hdt-folder span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hdt-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  height: auto;
+  min-height: 1.9rem;
+  margin: 0;
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--hdt-ink-2);
+  font-size: var(--font-size-13, 0.8125rem);
+  text-align: left;
+  line-height: 1.25;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.hdt-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--hdt-ink);
+}
+
+.hdt-row.on {
+  background: rgba(201, 162, 74, 0.16);
+  border-color: var(--hdt-gold);
+  color: var(--hdt-ink);
+  font-weight: 600;
+}
+
+.hdt-row.drop-ok {
+  outline: 2px dashed var(--hdt-gold);
+  outline-offset: -2px;
+  background: rgba(201, 162, 74, 0.12);
+}
+
+.hdt-row .n {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hdt-row small {
+  color: var(--hdt-ink-3);
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
+.hdt-row.hdt-journal {
+  padding-left: 1.4rem;
+}
+
+.hdt-row.hdt-cat {
+  padding-left: 2.4rem;
+  min-height: 1.7rem;
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.hdt-newcount {
+  flex: none;
+  min-width: 1.2rem;
+  padding: 0 0.35rem;
+  border-radius: 0.6rem;
+  background: var(--hdt-gold);
+  color: var(--hdt-gold-ink);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.hdt-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0.75rem 0.6rem;
+  gap: 0.5rem;
+}
+
+.hdt-head {
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  flex: none;
+}
+
+.hdt-head h2 {
+  margin: 0;
+  font-family: inherit;
+  padding: 0;
+  border: 0;
+  font-size: var(--font-size-16, 1rem);
+  font-weight: 600;
+  color: var(--hdt-ink);
+}
+
+.hdt-count,
+.hdt-loading {
+  font-size: var(--font-size-12, 0.75rem);
+  color: var(--hdt-ink-3);
+}
+
+.hdt-rescan {
+  margin-left: auto;
+  min-height: 1.6rem;
+  padding: 0.1rem 0.45rem;
+}
+
+.hdt-cards {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+  /* max-content, or a card (overflow: hidden, so no minimum height) shrinks to nothing once the
+     cards overflow the fixed-height grid. */
+  grid-auto-rows: max-content;
+  gap: 0.6rem;
+  align-content: start;
+  padding: 2px 4px 4px 2px;
+}
+
+.hdt-cards.hdt-size-s {
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+}
+
+.hdt-cards.hdt-size-l {
+  grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
+}
+
+.hdt-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--hdt-card);
+  border: 1px solid var(--hdt-line);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.hdt-card[hidden] {
+  display: none;
+}
+
+.hdt-card:hover {
+  border-color: #9f9275;
+}
+
+.hdt-card.on {
+  border-color: var(--hdt-gold);
+  box-shadow: 0 0 0 1px var(--hdt-gold);
+}
+
+/* New: a soft glow and the chip, never the solid gold edge of the picked card. */
+.hdt-card.unseen {
+  border-color: #7d6a3f;
+  box-shadow: 0 0 14px rgba(201, 162, 74, 0.28);
+}
+
+.hdt-card.dragging {
+  opacity: 0.35;
+}
+
+.hdt-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+.hdt-pick:focus-visible {
+  outline: 2px solid var(--hdt-gold);
+  outline-offset: -2px;
+}
+
+.hdt-thumb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #181513;
+}
+
+.hdt-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+}
+
+.hdt-excerpt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  height: 100%;
+  padding: 2rem 0.7rem 0;
+  overflow: hidden;
+  background: linear-gradient(#27231f, #1f1c19);
+  color: var(--hdt-ink-2);
+  font-size: var(--font-size-12, 0.75rem);
+  line-height: 1.4;
+  -webkit-mask-image: linear-gradient(#000 70%, transparent);
+  mask-image: linear-gradient(#000 70%, transparent);
+}
+
+/* The kind's icon sits top right, clear of the badge; the Show buttons cover it on hover. */
+.hdt-excerpt i {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.55rem;
+  font-size: 1rem;
+  color: var(--hdt-ink-3);
+}
+
+.hdt-badge,
+.hdt-new {
+  position: absolute;
+  top: 0.35rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: calc(100% - 5.5rem);
+  padding: 0.1rem 0.45rem;
+  border-radius: 0.7rem;
+  background: rgba(12, 11, 10, 0.85);
+  color: var(--hdt-ink);
+  font-size: 0.68rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hdt-badge {
+  left: 0.35rem;
+}
+
+.hdt-badge.gm {
+  color: var(--hdt-red);
+}
+
+.hdt-badge.file {
+  color: var(--hdt-blue);
+}
+
+.hdt-new {
+  left: 0.35rem;
+  background: var(--hdt-gold);
+  color: var(--hdt-gold-ink);
+  font-weight: 700;
+}
+
+.hdt-cb {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 0.4rem 0.55rem 0.5rem;
+}
+
+.hdt-nm {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  color: var(--hdt-ink);
+  font-weight: 600;
+  font-size: var(--font-size-13, 0.8125rem);
+}
+
+.hdt-nm span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hdt-nm i {
+  flex: none;
+  color: var(--hdt-gold);
+  font-size: 0.7rem;
+}
+
+.hdt-sub {
+  display: flex;
+  gap: 0.35rem;
+  min-width: 0;
+  color: var(--hdt-ink-3);
+  font-size: 0.7rem;
+}
+
+.hdt-where {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.hdt-why {
+  flex: none;
+  color: var(--hdt-gold);
+}
+
+.hdt-why:empty {
+  display: none;
+}
+
+.hdt-acts {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.12s,
+    visibility 0.12s;
+}
+
+.hdt-card:hover .hdt-acts,
+.hdt-card.on .hdt-acts,
+.hdt-card:focus-within .hdt-acts {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.hdt-acts button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: auto;
+  height: 1.75rem;
+  margin: 0;
+  padding: 0 0.55rem;
+  background: var(--hdt-gold);
+  border: 1px solid var(--hdt-gold);
+  color: var(--hdt-gold-ink);
+  font-size: var(--font-size-12, 0.75rem);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hdt-acts .go {
+  border-radius: 4px 0 0 4px;
+}
+
+.hdt-acts .more {
+  border-radius: 0 4px 4px 0;
+  border-left-color: #8e7435;
+  padding: 0 0.4rem;
+}
+
+.hdt-acts .go:hover,
+.hdt-acts .more:hover {
+  background: #e0b95c;
+}
+
+.hdt-empty {
+  grid-column: 1 / -1;
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--hdt-ink-3);
+}
+
+.hdt-empty[hidden] {
+  display: none;
+}
+
+/* The detail panel */
+
+.hdt-detail {
+  flex: 0 0 19rem;
+  overflow-y: auto;
+  padding: 0.65rem;
+  border-left: 1px solid var(--hdt-line);
+  background: rgba(0, 0, 0, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.hdt-big {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #181513;
+  border: 1px solid var(--hdt-line);
+  border-radius: 5px;
+  flex: none;
+}
+
+.hdt-big img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+}
+
+.hdt-big p {
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.75rem;
+  color: var(--hdt-ink-2);
+  font-size: var(--font-size-12, 0.75rem);
+  line-height: 1.45;
+  overflow: hidden;
+}
+
+.hdt-detail h3 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: var(--font-size-15, 0.95rem);
+  font-weight: 600;
+  color: var(--hdt-ink);
+  overflow-wrap: anywhere;
+}
+
+.hdt-kindline {
+  font-size: 0.72rem;
+  color: var(--hdt-ink-3);
+}
+
+.hdt-btns,
+.hdt-togs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.hdt-btn,
+.hdt-tog {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex: none;
+  width: auto;
+  height: auto;
+  min-height: 1.95rem;
+  margin: 0;
+  padding: 0.2rem 0.65rem;
+  background: #2f3238;
+  border: 1px solid var(--hdt-line);
+  border-radius: 4px;
+  color: var(--hdt-ink);
+  font-size: var(--font-size-12, 0.75rem);
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.hdt-btn:hover,
+.hdt-tog:hover {
+  border-color: #8a7a55;
+}
+
+.hdt-btn.pri {
+  background: var(--hdt-gold);
+  border-color: var(--hdt-gold);
+  color: var(--hdt-gold-ink);
+  font-weight: 700;
+}
+
+.hdt-btn.pri:hover {
+  background: #e0b95c;
+}
+
+.hdt-btn.on {
+  border-color: var(--hdt-gold);
+  color: var(--hdt-gold);
+}
+
+.hdt-tog {
+  border-radius: 1rem;
+  background: var(--hdt-panel);
+  color: var(--hdt-ink-2);
+}
+
+.hdt-tog.on {
+  border-color: var(--hdt-green);
+  background: rgba(98, 173, 114, 0.18);
+  color: var(--hdt-ink);
+}
+
+.hdt-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #6c675e;
+  flex: none;
+}
+
+/* Connected is blue, so it never reads as the green of "can see". */
+.hdt-dot.online {
+  background: #5b9bd5;
+}
+
+.hdt-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: var(--font-size-12, 0.75rem);
+  color: var(--hdt-ink);
+}
+
+.hdt-file,
+.hdt-note {
+  font-size: 0.7rem;
+  color: var(--hdt-ink-3);
+  overflow-wrap: anywhere;
+}
+
+.hdt-field select {
+  max-width: 100%;
+  height: auto;
+  min-height: 1.9rem;
+  padding: 0.2rem 0.4rem;
+  background: var(--hdt-panel);
+  border: 1px solid var(--hdt-line);
+  border-radius: 4px;
+  color: var(--hdt-ink);
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.hdt-field select option {
+  background: var(--hdt-panel);
+  color: var(--hdt-ink);
+}
+
+/* The Show options */
+
+.hdt-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4rem;
+  background: rgba(8, 7, 6, 0.55);
+}
+
+.hdt-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 28rem;
+  max-width: calc(100% - 2rem);
+  padding: 0.85rem;
+  background: var(--hdt-panel);
+  border: 1px solid var(--hdt-gold);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  max-height: calc(100% - 6rem);
+  overflow-y: auto;
+}
+
+.hdt-opts-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hdt-opts-head img {
+  width: 4.5rem;
+  height: 3.4rem;
+  object-fit: cover;
+  border: 1px solid var(--hdt-line);
+  border-radius: 4px;
+}
+
+.hdt-opts-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.hdt-opts-head strong {
+  display: block;
+  font-size: var(--font-size-14, 0.875rem);
+  overflow-wrap: anywhere;
+}
+
+.hdt-x {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--hdt-ink-3);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.hdt-opts-foot {
+  position: sticky;
+  bottom: -0.85rem;
+  margin: 0 -0.85rem -0.85rem;
+  padding: 0.6rem 0.85rem 0.85rem;
+  background: var(--hdt-panel);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* -------------------------------------------------- */
+/*  The finder                                         */
+/* -------------------------------------------------- */
+
+.hdt-finder {
+  display: flex;
+  flex-direction: column;
+}
+
+.hdt-finder-box {
+  flex: none;
+  margin: 0.6rem;
+  min-height: 2.6rem;
+}
+
+.hdt-finder-box input {
+  font-size: var(--font-size-16, 1rem);
+}
+
+.handouts-finder kbd {
+  display: inline-block;
+  padding: 0 0.3rem;
+  border: 1px solid #5a5446;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: #2b2722;
+  color: var(--hdt-ink);
+  font-family: var(--font-sans-condensed, "Roboto Condensed", sans-serif);
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
+.hdt-results {
+  list-style: none;
+  margin: 0;
+  padding: 0 0.4rem 0.4rem;
+  max-height: 26rem;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
+.hdt-res-group {
+  padding: 0.45rem 0.5rem 0.15rem;
+  font-family: var(--font-sans-condensed, "Roboto Condensed", sans-serif);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hdt-ink-3);
+}
+
+.hdt-res {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.hdt-res:not(.on):hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.hdt-res.on {
+  background: rgba(201, 162, 74, 0.15);
+  border-color: var(--hdt-gold);
+}
+
+.hdt-res-th {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 3rem;
+  overflow: hidden;
+  background: #181513;
+  border: 1px solid var(--hdt-line);
+  border-radius: 4px;
+  color: var(--hdt-ink-3);
+}
+
+.hdt-res-th img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+}
+
+.hdt-res-tx {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.hdt-res-nm {
+  font-weight: 600;
+  color: var(--hdt-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hdt-res-sub {
+  font-size: 0.72rem;
+  color: var(--hdt-ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hdt-res-go {
+  flex: none;
+  font-size: 0.7rem;
+  color: var(--hdt-ink-2);
+  white-space: nowrap;
+}
+
+.hdt-res-none {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--hdt-ink-3);
+}
+
+.hdt-finder-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  padding: 0.45rem 0.75rem;
+  border-top: 1px solid var(--hdt-line);
+  background: #1a1815;
+  font-size: 0.7rem;
+  color: var(--hdt-ink-3);
+}
+
+/* -------------------------------------------------- */
+/*  Classic Mode's way back, in the stock directory    */
+/* -------------------------------------------------- */
+
+.handouts-directory-button {
+  flex: 1 1 100%;
+}
+
+/* -------------------------------------------------- */
+/*  A narrow window: the rail and the detail narrower,  */
+/*  then the detail gone (a double click still opens)   */
+/* -------------------------------------------------- */
+
+@container handouts (max-width: 980px) {
+  .hdt-rail {
+    flex-basis: 11.5rem;
+  }
+  .hdt-detail {
+    flex-basis: 15rem;
+  }
+}
+
+@container handouts (max-width: 880px) {
+  .hdt-classic-text {
+    display: none;
+  }
+  .hdt-detail {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------- */
+/*  Focus, the keep switch, small cards, the hints     */
+/* -------------------------------------------------- */
+
+.hdt-row:focus-visible,
+.hdt-pill:focus-visible,
+.hdt-classic:focus-visible,
+.hdt-rescan:focus-visible,
+.hdt-btn:focus-visible,
+.hdt-tog:focus-visible,
+.hdt-x:focus-visible,
+.hdt-more:focus-visible,
+.hdt-acts button:focus-visible {
+  outline: 2px solid var(--hdt-gold);
+  outline-offset: 1px;
+}
+
+.hdt-tog.hdt-switch {
+  align-self: flex-start;
+  border-radius: 4px;
+}
+
+.hdt-tog.hdt-switch i {
+  color: var(--hdt-ink-3);
+}
+
+.hdt-tog.hdt-switch.on i {
+  color: var(--hdt-green);
+}
+
+.hdt-cards.hdt-size-s .hdt-badge .hdt-badge-text {
+  display: none;
+}
+
+.hdt-detail[hidden] {
+  display: none;
+}
+
+.hdt-more {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: auto;
+  height: auto;
+  margin: 0.25rem 0 0.75rem;
+  padding: 0.3rem 0.8rem;
+  background: transparent;
+  border: 1px dashed var(--hdt-gold);
+  border-radius: 1rem;
+  color: var(--hdt-gold);
+  font-family: inherit;
+  font-size: var(--font-size-12, 0.75rem);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.hdt-more[hidden] {
+  display: none;
+}
+
+.hdt-undo {
+  border-color: var(--hdt-gold);
+  color: var(--hdt-gold);
+}
+
+/* Last, so no later image rule outranks it: a page no player can see, dimmed for the GM. */
+.hdt-card.dim .hdt-thumb img {
+  opacity: 0.6;
+}
+
+/* The strip a reveal leaves at the top of the cards, with its Undo. */
+.hdt-reveal {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+  padding: 0.35rem 0.4rem 0.35rem 0.6rem;
+  border: 1px solid #6b5a33;
+  border-radius: 4px;
+  background: rgba(201, 162, 74, 0.12);
+  color: var(--hdt-ink);
+  font-size: var(--font-size-12, 0.75rem);
+}
+
+.hdt-reveal > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.hdt-reveal .hdt-x {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.hdt-markall {
+  margin-left: auto;
+}
+
+/* The pin sits under the Show buttons at the picture's top right, clear of the badge: shown on
+   hover, focus or selection, and always while the card is pinned. */
+.hdt-pin {
+  position: absolute;
+  right: 0.35rem;
+  top: 2.3rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 11, 10, 0.85);
+  border: 1px solid var(--hdt-line);
+  border-radius: 4px;
+  color: var(--hdt-ink-2);
+  font-size: 0.75rem;
+  cursor: pointer;
+  box-shadow: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.hdt-pin[aria-pressed="true"] {
+  color: var(--hdt-gold);
+  opacity: 1;
+  visibility: visible;
+}
+
+.hdt-card:hover .hdt-pin,
+.hdt-card.on .hdt-pin,
+.hdt-card:focus-within .hdt-pin {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hdt-pin:focus-visible {
+  outline: 2px solid var(--hdt-gold);
+  outline-offset: 1px;
+}
+
+/* While the Show buttons cover the top of a card, its badge shrinks to its icon. */
+.hdt-card:is(:hover, .on, :focus-within) .hdt-badge .hdt-badge-text {
+  display: none;
+}
+
+/* A text page's detail: the words, not an empty picture frame. */
+.hdt-big:has(> p) {
+  aspect-ratio: auto;
+  max-height: 14rem;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+/* "Everyone" is on: each player can see it through it, drawn quieter than a player's own grant. */
+.hdt-tog.on.implied {
+  border-color: #3f6a4a;
+  background: rgba(98, 173, 114, 0.08);
+  color: var(--hdt-ink-2);
+}
+
+/* While searching, the pills' counts (which count the view, not the search) step aside. */
+.hdt-searching .hdt-pill small {
+  display: none;
+}
