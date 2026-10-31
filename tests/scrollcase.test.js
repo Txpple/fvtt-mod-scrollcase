@@ -4,6 +4,7 @@ import {
   excerptOf,
   exportName,
   exportOf,
+  frameShape,
   firstImage,
   folderList,
   folderOf,
@@ -356,5 +357,16 @@ describe("mendViewClass", () => {
 
   it("leaves right classes alone", () => {
     expect(mendViewClass(["vtt", "game", "system-dnd5e"])).toEqual({ remove: [], add: [] });
+  });
+});
+
+describe("frameShape", () => {
+  it("names a picture's shape from its size, and nothing before it loads", () => {
+    expect(frameShape(1536, 2048)).toBe("tall");
+    expect(frameShape(2560, 1600)).toBe("wide");
+    expect(frameShape(512, 512)).toBe("square");
+    expect(frameShape(1000, 2400)).toBe("odd");
+    expect(frameShape(3000, 1000)).toBe("odd");
+    expect(frameShape(0, 0)).toBe("");
   });
 });

@@ -11,7 +11,7 @@
  */
 
 import { log, MODULE_ID, setting, t } from "./common.js";
-import { kindOf, LINK_PARAM, linkedPage, mendViewClass, pageLink, withoutLink } from "./decide/scrollcase.js";
+import { frameShape, kindOf, LINK_PARAM, linkedPage, mendViewClass, pageLink, withoutLink } from "./decide/scrollcase.js";
 import { Finder } from "./finder.js";
 import { ScrollCaseWindow, openClassicJournal } from "./library.js";
 import * as memory from "./memory.js";
@@ -21,6 +21,9 @@ import * as show from "./show.js";
 export { MODULE_ID, log, t, setting };
 
 const DIRECTORY_BUTTON = "scrollcase-directory-button";
+
+/** The pictures framed by their shape: the cards', the Show options' and the finder's. */
+const FRAMED = ".hdt-thumb img, .hdt-opts-head img, .hdt-res-th img";
 
 // A page link's query reaches Foundry's server, which names the body's view class from the whole
 // address (`game?page=…`, not `game`): the interface loses its layout. Mended as this script loads,
@@ -78,6 +81,18 @@ Hooks.once("init", () => {
     `modules/${MODULE_ID}/templates/reader.hbs`
   ]).catch(err =>
     log.error("preloading the templates failed", err)
+  );
+
+  // A card's picture is tagged with its shape once it loads, so the stylesheet crops a portrait
+  // from the top and shows a scroll or a panorama whole. A load never bubbles: this listens on the
+  // way down.
+  document.addEventListener(
+    "load",
+    event => {
+      const img = event.target;
+      if (img instanceof HTMLImageElement && img.matches(FRAMED)) img.dataset.shape = frameShape(img.naturalWidth, img.naturalHeight);
+    },
+    true
   );
 });
 

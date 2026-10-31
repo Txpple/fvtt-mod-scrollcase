@@ -362,3 +362,20 @@ export function mendViewClass(classes) {
   const remove = [...classes].filter(c => /^[a-z]+\?/.test(c));
   return { remove, add: [...new Set(remove.map(c => c.slice(0, c.indexOf("?"))))] };
 }
+
+
+/**
+ * How a picture sits in its frame, from its pixel size: "tall" is cropped from the top (a
+ * portrait keeps its head), "wide" and "square" from the centre, "odd" (a scroll, a panorama) is
+ * shown whole; "" while the size is unknown.
+ * @param {number} width
+ * @param {number} height
+ */
+export function frameShape(width, height) {
+  if (!(width > 0 && height > 0)) return "";
+  const ratio = width / height;
+  if (ratio < 0.55 || ratio > 2) return "odd";
+  if (ratio < 0.9) return "tall";
+  if (ratio > 1.1) return "wide";
+  return "square";
+}

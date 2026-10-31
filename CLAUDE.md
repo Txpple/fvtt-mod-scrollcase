@@ -14,7 +14,9 @@ of the cards in view. 1.0.0, the first release, named Scroll Case on the user's 
 evening; the setup screen's `getPackages`, 7,086 modules, has no "Scroll Case" and no `scrollcase`). Before it, two
 adversarial review passes (four Opus reviewers) and a third on Playwright screenshots, every finding fixed; the
 Reader (a card's page simply) and a Show opening in it followed on the user's word. Its look is the family's: Clue
-Board wears it too. `npm run verify` green (85 tests); `tools/live-check.mjs --walk` GREEN on the sandbox (43 checks).
+Board wears it too. `npm run verify` green (86 tests); `tools/live-check.mjs --walk` GREEN on the sandbox (43 checks).
+Unreleased on `main` and on the sandbox: square cards, each picture framed by its shape (`frameShape`, tagged on load:
+a tall one cropped from the top, a scroll or a panorama shown whole), as in Clue Board.
 
 ## The rules this module keeps
 
@@ -62,7 +64,7 @@ Board wears it too. `npm run verify` green (85 tests); `tools/live-check.mjs --w
   `allImages`, `pictureOf`, `stripSecrets`, `withoutImages`, paths (`fileName`, `folderOf`, `prettyName`,
   `normPath`, `samePath`, `isImageFile`, `folderList`), `matchWhy`, `searchFields`, `levelOf`, `visibilityWrite`,
   `whoSees`, `sameIds`, `remember`, the export (`exportName`, `exportOf`), the link (`pageLink`, `linkedPage`,
-  `withoutLink`, `mendViewClass`). Tested in `tests/scrollcase.test.js`.
+  `withoutLink`, `mendViewClass`), `frameShape`. Tested in `tests/scrollcase.test.js`.
 - `scripts/common.js`: the id, the logger, `t`, `setting`.
 - `scripts/scrollcase.js`: the entry point; the settings and the keybinding at `init`; the Journal button and the
   directory's way back; the refresh hooks; the players' show listeners, a linked page opened, the stylesheet probe,
