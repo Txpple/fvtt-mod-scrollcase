@@ -103,6 +103,7 @@
 
 .hdt-pill,
 .hdt-classic,
+.hdt-export,
 .hdt-rescan {
   font-family: inherit;
   flex: none;
@@ -129,6 +130,7 @@
 
 .hdt-pill:hover,
 .hdt-classic:hover,
+.hdt-export:hover,
 .hdt-rescan:hover {
   color: var(--hdt-ink);
   border-color: #8a7a55;
@@ -309,8 +311,12 @@
   color: var(--hdt-ink-3);
 }
 
-.hdt-rescan {
+.hdt-export {
   margin-left: auto;
+}
+
+.hdt-export,
+.hdt-rescan {
   min-height: 1.6rem;
   padding: 0.1rem 0.45rem;
 }
@@ -1015,6 +1021,7 @@
 .hdt-row:focus-visible,
 .hdt-pill:focus-visible,
 .hdt-classic:focus-visible,
+.hdt-export:focus-visible,
 .hdt-rescan:focus-visible,
 .hdt-btn:focus-visible,
 .hdt-tog:focus-visible,

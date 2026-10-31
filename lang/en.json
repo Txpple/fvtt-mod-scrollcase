@@ -81,6 +81,12 @@
       "matching": "{n} matching “{q}”",
       "matchingFiles": "{pages}, plus {files} not in a journal, matching “{q}”"
     },
+    "export": {
+      "hint": "Export the cards in view as a JSON file (their text, no pictures)",
+      "done": "{name} saved: {n} entries.",
+      "doneOne": "{name} saved: 1 entry.",
+      "none": "No cards in view to export."
+    },
     "files": {
       "loading": "Reading the asset folders…",
       "rescan": "Read the asset folders again"

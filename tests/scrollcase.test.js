@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   allImages,
   excerptOf,
+  exportName,
+  exportOf,
   firstImage,
   folderList,
   folderOf,
@@ -20,7 +22,8 @@ import {
   searchFields,
   stripSecrets,
   visibilityWrite,
-  whoSees
+  whoSees,
+  withoutImages
 } from "../scripts/decide/scrollcase.js";
 
 const { INHERIT, NONE, LIMITED, OBSERVER, OWNER } = LEVEL;
@@ -259,5 +262,49 @@ describe("remember", () => {
     expect(list.map(r => r.key)).toEqual(["a", "b"]);
     expect(list[0].at).toBe(3);
     expect(remember(list, { key: "c" }, 2).map(r => r.key)).toEqual(["c", "a"]);
+  });
+});
+
+describe("the export", () => {
+  it("drops pictures from the HTML and empty figures with them", () => {
+    expect(withoutImages('<p>A<img src="a.webp">B</p>')).toBe("<p>AB</p>");
+    expect(withoutImages('<figure><img src="x.png" alt=""></figure><p>Text</p>')).toBe(
+      "<p>Text</p>"
+    );
+    expect(
+      withoutImages('<figure><img src="x.png"><figcaption>The map</figcaption></figure>')
+    ).toBe("<figure><figcaption>The map</figcaption></figure>");
+    expect(withoutImages(null)).toBe("");
+  });
+
+  it("names the file after the view and the day", () => {
+    expect(exportName("Session 02 › Clues", "2026-10-30T21:00:00.000Z")).toBe(
+      "scrollcase-session-02-clues-2026-10-30.json"
+    );
+    expect(exportName("Café Notes", "2026-10-30T00:00:00Z")).toBe(
+      "scrollcase-cafe-notes-2026-10-30.json"
+    );
+    expect(exportName("", "2026-10-30T00:00:00Z")).toBe("scrollcase-entries-2026-10-30.json");
+  });
+
+  it("wraps the entries with what was in view", () => {
+    const data = exportOf({
+      world: "W",
+      view: "All pages",
+      type: "all",
+      search: "",
+      at: "2026-10-30T00:00:00Z",
+      entries: [{ name: "A" }]
+    });
+    expect(data).toMatchObject({
+      format: "fvtt-mod-scrollcase/entries",
+      version: 1,
+      view: "All pages",
+      search: null,
+      count: 1
+    });
+    expect(
+      exportOf({ world: "W", view: "v", type: "text", search: "map", at: "x", entries: [] }).search
+    ).toBe("map");
   });
 });

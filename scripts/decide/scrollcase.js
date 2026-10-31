@@ -284,3 +284,42 @@ export function folderList(text, fallback) {
 
 /** An image file, by its extension. */
 export const isImageFile = path => /\.(webp|png|jpe?g|gif|avif|svg|bmp)$/i.test(String(path ?? "").replace(/\?.*$/, ""));
+
+/** A page's HTML without its pictures: every `<img>` gone, an emptied `<figure>` with it. */
+export function withoutImages(html) {
+  return String(html ?? "")
+    .replace(/<img\b[^>]*>/gi, "")
+    .replace(/<figure\b[^>]*>\s*(?:<figcaption\b[^>]*>\s*<\/figcaption>\s*)?<\/figure>/gi, "");
+}
+
+/** What an export file is called: `scrollcase-<what is in view>-<date>.json`. */
+export function exportName(heading, at) {
+  const slug = String(heading ?? "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 60);
+  return `scrollcase-${slug || "entries"}-${String(at).slice(0, 10)}.json`;
+}
+
+/**
+ * The export of the cards in view, in their order: each card's words and where it lives, no
+ * picture data (an image, video or PDF page names its file). `entries` come already read for the
+ * exporting user (a player's without the GM's secrets).
+ * @param {{ world: string, view: string, type: string, search: string, at: string, entries: object[] }} what
+ */
+export function exportOf({ world, view, type, search, at, entries }) {
+  return {
+    format: "fvtt-mod-scrollcase/entries",
+    version: 1,
+    world,
+    view,
+    type,
+    search: search || null,
+    exportedAt: at,
+    count: entries.length,
+    entries
+  };
+}

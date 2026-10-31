@@ -13,6 +13,8 @@ import { log, MODULE_ID, setting, t } from "./common.js";
 import {
   allImages,
   excerptOf,
+  exportName,
+  exportOf,
   folderList,
   folderOf,
   isImageFile,
@@ -23,7 +25,8 @@ import {
   plainText,
   prettyName,
   searchFields,
-  stripSecrets
+  stripSecrets,
+  withoutImages
 } from "./decide/scrollcase.js";
 import * as memory from "./memory.js";
 import * as show from "./show.js";
@@ -186,6 +189,30 @@ export function fileCards() {
   }));
 }
 
+/**
+ * One card as the export writes it: its words in full (a player's without the GM's secrets), where
+ * it lives, and no picture: an image, video or PDF page names its file, a text page's images go.
+ */
+function exportEntry(card, user = game.user) {
+  if (card.loose) return { name: card.name, kind: "image", file: card.file, inJournal: false };
+  const { page } = card;
+  const raw = page.text?.content ?? "";
+  const html = withoutImages(page.testUserPermission(user, "OWNER") ? raw : stripSecrets(raw));
+  return {
+    name: card.name,
+    uuid: card.key,
+    kind: card.kind,
+    type: page.type,
+    journal: card.journal || null,
+    folder: card.folder || null,
+    section: card.section || null,
+    caption: card.caption || null,
+    file: card.kind === "text" ? null : page.src || null,
+    text: plainText(html),
+    html
+  };
+}
+
 /** The time a thing was shown, short. */
 function when(at) {
   try {
@@ -249,7 +276,8 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
       seeAll: ScrollCaseWindow.#onSeeAll,
       seeUser: ScrollCaseWindow.#onSeeUser,
       classic: ScrollCaseWindow.#onClassic,
-      rescan: ScrollCaseWindow.#onRescan
+      rescan: ScrollCaseWindow.#onRescan,
+      export: ScrollCaseWindow.#onExport
     }
   };
 
@@ -1135,6 +1163,22 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
   static #onRescan() {
     void loadFiles(true);
     this.render();
+  }
+
+  /** The cards in view, as the type and the search leave them and in their order, saved as a JSON file. */
+  static #onExport() {
+    const keys = [...this.element.querySelectorAll(".hdt-card[data-key]:not([hidden])")].map(c => c.dataset.key);
+    const cards = new Map([...pageCards(), ...fileCards()].map(c => [c.key, c]));
+    const entries = keys.flatMap(k => (cards.has(k) ? [exportEntry(cards.get(k))] : []));
+    if (!entries.length) return ui.notifications.warn(t("export.none"));
+    const at = new Date().toISOString();
+    const heading = this.#heading(this.#view);
+    const search = this.#query.trim();
+    const data = exportOf({ world: game.world.title, view: heading, type: this.#type, search, at, entries });
+    // The file is named for the local day; the export's own stamp stays UTC.
+    const name = exportName(search ? `${heading} ${search}` : heading, new Date().toLocaleDateString("en-CA"));
+    foundry.utils.saveDataToFile(JSON.stringify(data, null, 2), "application/json", name);
+    ui.notifications.info(t(entries.length === 1 ? "export.doneOne" : "export.done", { name, n: entries.length }));
   }
 
   /** @override */

@@ -53,6 +53,7 @@
         <span class="hdt-count" data-base="{{countBase}}" aria-live="polite"></span>
         {{#if loading}}<span class="hdt-loading"><i class="fa-solid fa-spinner fa-spin" inert></i> {{localize "fvtt-mod-scrollcase.files.loading"}}</span>{{/if}}
         {{#if markAll}}<button type="button" class="hdt-btn hdt-markall" data-action="markSeen"><i class="fa-solid fa-check-double" inert></i> {{localize "fvtt-mod-scrollcase.badge.markAll"}}</button>{{/if}}
+        <button type="button" class="hdt-export" data-action="export" data-tooltip="{{localize 'fvtt-mod-scrollcase.export.hint'}}" aria-label="{{localize 'fvtt-mod-scrollcase.export.hint'}}"><i class="fa-solid fa-file-export" inert></i></button>
         {{#if isGM}}<button type="button" class="hdt-rescan" data-action="rescan" data-tooltip="{{localize 'fvtt-mod-scrollcase.files.rescan'}}" aria-label="{{localize 'fvtt-mod-scrollcase.files.rescan'}}"><i class="fa-solid fa-arrows-rotate" inert></i></button>{{/if}}
       </div>
       {{#if reveal}}

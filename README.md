@@ -38,6 +38,9 @@ player (or you) the stock journal back with one click.
 - **The detail panel.** Click a card for the picture large, where it lives, its section, who can see it (player
   by player), when you last showed it and *Show again* to the same players, *Open in journal* for editing, and
   a copyable link.
+- **Export what you see.** The export button beside the heading saves the cards in view as a JSON file, in their
+  order, with the view, the type and the search applied: each page's name, journal, folder, section, caption and
+  text (as plain text and as HTML). Pictures are left out; an image, video or PDF page gives its file path.
 
 ### For the players
 
@@ -46,6 +49,7 @@ player (or you) the stock journal back with one click.
 - **The Reader.** Clicking a card, or being shown something by the GM, opens a simple window with just that
   page: its name, its picture and its text. No page list, no journal around it. It updates when the GM edits
   the page, and it never shows the GM's secret sections.
+- **Export** works for players too: what they can see, without the GM's secret sections.
 - A player who prefers Foundry's journal turns on **Classic Mode** for themselves; a GM's Show then reaches them
   the way Foundry's own Show does.
 
