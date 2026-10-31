@@ -6,13 +6,15 @@ Journal button opens it, Classic Mode puts the stock journal back per client. Pa
 is `..`, its CLAUDE.md has the family's conventions; the plan is `../docs/plans/scrollcase.md`). Plain ES modules,
 no build step, no libWrapper, no socketlib, MIT.
 
-**State (2026-10-30).** 1.0.2 (a page's web link, `/game?page=<uuid>`, and the body's view class mended for it),
-released and on prod (the installer, byte-identical; a link opens the Reader there, the layout whole). 1.0.1 the JSON
-export of the cards in view. 1.0.0, the first release, named Scroll Case on the user's word (built as "Handouts" the same
+**State (2026-10-31).** 1.0.3 (the rails shortened on the user's word: a player's is All, then New; the GM's All,
+Visible to players, GM only, Not in a journal; pins and what was shown live on the cards, the panel and the finder),
+released and on prod (the installer; every released file served byte-identical; a prod GM page reads 1.0.3 and that
+rail). 1.0.2 a page's web link, `/game?page=<uuid>`, and the body's view class mended for it; 1.0.1 the JSON export
+of the cards in view. 1.0.0, the first release, named Scroll Case on the user's word (built as "Handouts" the same
 evening; the setup screen's `getPackages`, 7,086 modules, has no "Scroll Case" and no `scrollcase`). Before it, two
 adversarial review passes (four Opus reviewers) and a third on Playwright screenshots, every finding fixed; the
-Reader (a card's page simply) and a Show opening in it followed on the user's word. `npm run verify` green
-(85 tests); `tools/live-check.mjs --walk` GREEN on the sandbox (43 checks).
+Reader (a card's page simply) and a Show opening in it followed on the user's word. Its look is the family's: Clue
+Board wears it too. `npm run verify` green (85 tests); `tools/live-check.mjs --walk` GREEN on the sandbox (43 checks).
 
 ## The rules this module keeps
 
