@@ -6,7 +6,9 @@ Journal button opens it, Classic Mode puts the stock journal back per client. Pa
 is `..`, its CLAUDE.md has the family's conventions; the plan is `../docs/plans/scrollcase.md`). Plain ES modules,
 no build step, no libWrapper, no socketlib, MIT.
 
-**State (2026-10-31).** 1.0.3 (the rails shortened on the user's word: a player's is All, then New; the GM's All,
+**State (2026-10-31).** 1.0.4 (square cards, each picture framed by its shape: `frameShape`, tagged on load; a
+tall one cropped from the top, a scroll or a panorama shown whole; as in Clue Board) released and on prod (the
+installer). 1.0.3 (the rails shortened on the user's word: a player's is All, then New; the GM's All,
 Visible to players, GM only, Not in a journal; pins and what was shown live on the cards, the panel and the finder),
 released and on prod (the installer; every released file served byte-identical; a prod GM page reads 1.0.3 and that
 rail). 1.0.2 a page's web link, `/game?page=<uuid>`, and the body's view class mended for it; 1.0.1 the JSON export
@@ -15,8 +17,6 @@ evening; the setup screen's `getPackages`, 7,086 modules, has no "Scroll Case" a
 adversarial review passes (four Opus reviewers) and a third on Playwright screenshots, every finding fixed; the
 Reader (a card's page simply) and a Show opening in it followed on the user's word. Its look is the family's: Clue
 Board wears it too. `npm run verify` green (86 tests); `tools/live-check.mjs --walk` GREEN on the sandbox (43 checks).
-Unreleased on `main` and on the sandbox: square cards, each picture framed by its shape (`frameShape`, tagged on load:
-a tall one cropped from the top, a scroll or a panorama shown whole), as in Clue Board.
 
 ## The rules this module keeps
 
