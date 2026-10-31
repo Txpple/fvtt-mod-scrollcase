@@ -241,6 +241,10 @@
       "ctrlEnter": "open in journal",
       "none": "Nothing by that name, section, file or word.",
       "empty": "Type to search. Pinned and recently shown handouts appear here."
+    },
+    "reader": {
+      "gone": "Gone",
+      "empty": "This page has nothing to read here."
     }
   }
 }

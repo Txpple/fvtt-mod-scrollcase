@@ -11,7 +11,8 @@
 }
 
 .handouts-library,
-.handouts-finder {
+.handouts-finder,
+.handouts-reader {
   --hdt-ground: #1e1b18;
   --hdt-panel: #26221e;
   --hdt-card: #2b2723;
@@ -27,7 +28,8 @@
 }
 
 .handouts-library .window-content,
-.handouts-finder .window-content {
+.handouts-finder .window-content,
+.handouts-reader .window-content {
   padding: 0;
   background: var(--hdt-ground);
   color: var(--hdt-ink);
@@ -1070,11 +1072,6 @@
   color: var(--hdt-gold);
 }
 
-/* Last, so no later image rule outranks it: a page no player can see, dimmed for the GM. */
-.hdt-card.dim .hdt-thumb img {
-  opacity: 0.6;
-}
-
 /* The strip a reveal leaves at the top of the cards, with its Undo. */
 .hdt-reveal {
   display: flex;
@@ -1168,4 +1165,129 @@
 /* While searching, the pills' counts (which count the view, not the search) step aside. */
 .hdt-searching .hdt-pill small {
   display: none;
+}
+
+/* -------------------------------------------------- */
+/*  The Reader: one page, its picture and its text      */
+/* -------------------------------------------------- */
+
+.hdt-reader {
+  display: flex;
+  flex-direction: column;
+  max-height: 82vh;
+}
+
+.hdt-reader-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1rem 1.25rem 1.25rem;
+  font-size: var(--font-size-14, 0.875rem);
+  line-height: 1.6;
+  color: var(--hdt-ink);
+}
+
+.hdt-reader-title {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--hdt-ink);
+}
+
+.hdt-reader-figure {
+  margin: 0 0 0.75rem;
+}
+
+.hdt-reader-figure img,
+.hdt-reader-video {
+  display: block;
+  width: 100%;
+  max-height: 64vh;
+  object-fit: contain;
+  border: 0;
+  border-radius: 4px;
+  background: #121010;
+}
+
+.hdt-reader-figure figcaption {
+  margin-top: 0.4rem;
+  text-align: center;
+  font-size: var(--font-size-12, 0.75rem);
+  color: var(--hdt-ink-3);
+}
+
+/* A picture in the text stays under half the window's height, so the words show beneath it. */
+.hdt-reader-text img {
+  display: block;
+  max-width: 100%;
+  max-height: 46vh;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  border: 0;
+  border-radius: 4px;
+}
+
+.hdt-reader-text figure {
+  margin: 0 0 0.75rem;
+}
+
+.hdt-reader-text figcaption {
+  text-align: center;
+  font-size: var(--font-size-12, 0.75rem);
+  color: var(--hdt-ink-3);
+}
+
+.hdt-reader-text p {
+  margin: 0 0 0.7rem;
+}
+
+.hdt-reader-text :is(h1, h2, h3, h4) {
+  margin: 1rem 0 0.5rem;
+  border: 0;
+  font-family: inherit;
+  color: var(--hdt-ink);
+}
+
+.hdt-reader-text :is(aside, blockquote) {
+  margin: 0.75rem 0;
+  padding: 0.6rem 0.8rem;
+  border-left: 3px solid var(--hdt-gold);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 0 4px 4px 0;
+}
+
+.hdt-reader-text a {
+  color: var(--hdt-gold);
+}
+
+.hdt-reader-text table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hdt-reader-text :is(th, td) {
+  padding: 0.25rem 0.4rem;
+  border-bottom: 1px solid var(--hdt-line);
+  text-align: left;
+}
+
+.hdt-reader-empty {
+  color: var(--hdt-ink-3);
+}
+
+.hdt-reader-foot {
+  display: flex;
+  justify-content: flex-end;
+  flex: none;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--hdt-line);
+}
+
+/* Last, so no later image rule outranks it: a page no player can see, dimmed for the GM. */
+.hdt-card.dim .hdt-thumb img {
+  opacity: 0.6;
 }

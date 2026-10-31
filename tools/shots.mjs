@@ -280,6 +280,21 @@ try {
     foundry.applications.instances.get("handouts-library")?.element.querySelector('.hdt-row[data-view="all"]')?.click();
   });
   audit.player = await fp.evaluate(AUDIT);
+  const openReader = async name => {
+    const page = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === name);
+    foundry.applications.instances.get("handouts-library")?.element.querySelector(`.hdt-card[data-key="${page.uuid}"] [data-action="pick"]`)?.click();
+    for (let i = 0; i < 40 && !foundry.applications.instances.get(`handouts-reader-${page.id}`)?.rendered; i++) await new Promise(r => setTimeout(r, 100));
+  };
+  await shot(fp.page, "25-player-reader-text", openReader, "Darkmantle");
+  await shot(fp.page, "26-player-reader-image", async name => {
+    for (const app of [...foundry.applications.instances.values()]) if (app.id?.startsWith("handouts-reader-")) await app.close();
+    const page = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === name);
+    foundry.applications.instances.get("handouts-library")?.element.querySelector(`.hdt-card[data-key="${page.uuid}"] [data-action="pick"]`)?.click();
+    for (let i = 0; i < 40 && !foundry.applications.instances.get(`handouts-reader-${page.id}`)?.rendered; i++) await new Promise(r => setTimeout(r, 100));
+  }, "The Elders at the Fire");
+  await fp.evaluate(async () => {
+    for (const app of [...foundry.applications.instances.values()]) if (app.id?.startsWith("handouts-reader-")) await app.close();
+  });
   await shot(fp.page, "24-player-finder", async () => {
     await game.modules.get("fvtt-mod-handouts").api.finder();
     await new Promise(r => setTimeout(r, 300));

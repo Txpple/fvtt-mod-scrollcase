@@ -13,6 +13,7 @@
 import { log, setting, t } from "./common.js";
 import { kindOf, LEVEL, prettyName, visibilityWrite, whoSees } from "./decide/handouts.js";
 import * as memory from "./memory.js";
+import { Reader } from "./reader.js";
 
 const Journal = () => foundry.documents?.collections?.Journal ?? globalThis.Journal;
 
@@ -239,20 +240,10 @@ export function openInJournal(page) {
   }
 }
 
-/** Open a page for reading: an image as Foundry's popout, anything else in the journal sheet. */
+/** Open a page for reading: the Reader (its picture and its text, nothing else); a PDF in the journal, which shows one. */
 export function openForReading(page) {
-  if (kindOf(page.type) === "image" && page.src) {
-    const ImagePopout = foundry.applications?.apps?.ImagePopout;
-    if (ImagePopout) {
-      return new ImagePopout({
-        src: page.src,
-        uuid: page.uuid,
-        caption: page.image?.caption ?? "",
-        window: { title: page.name }
-      }).render({ force: true });
-    }
-  }
-  return openInJournal(page);
+  if (kindOf(page.type) === "pdf") return openInJournal(page);
+  return Reader.open(page);
 }
 
 /** Open a picture in Foundry's image popout, for the GM's own look. */

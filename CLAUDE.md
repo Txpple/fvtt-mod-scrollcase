@@ -58,7 +58,9 @@ Deployed to the sandbox (mirrored from prod the same evening; a mirror removes i
 - `scripts/show.js`: every world write and every show, the reveal and its Undo; `players`, `whoCanSee`,
   `openInJournal`, `openForReading`, `openPicture`.
 - `scripts/finder.js`: `Finder`.
+- `scripts/reader.js`: `Reader`, one page's picture and text (enriched with `secrets: page.isOwner`), one window
+  per page, following its page; what a card click (a player's) or Enter (the GM's) opens.
 - `scripts/memory.js`: the browser's record.
-- `templates/library.hbs`, `templates/finder.hbs`, `styles/handouts.css`, `lang/en.json`.
+- `templates/library.hbs`, `templates/finder.hbs`, `templates/reader.hbs`, `styles/handouts.css`, `lang/en.json`.
 - `tools/live-check.mjs` (the walk), `tools/shots.mjs` (24 states and the words audit); both refuse any host but
   `FOUNDRY_HOST=local`.

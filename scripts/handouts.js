@@ -14,6 +14,7 @@ import { log, MODULE_ID, setting, t } from "./common.js";
 import { Finder } from "./finder.js";
 import { HandoutsWindow, openClassicJournal } from "./library.js";
 import * as memory from "./memory.js";
+import { Reader } from "./reader.js";
 import * as show from "./show.js";
 
 export { MODULE_ID, log, t, setting };
@@ -57,7 +58,11 @@ Hooks.once("init", () => {
 
   if (!setting("enabled")) return;
   const load = foundry.applications?.handlebars?.loadTemplates ?? loadTemplates;
-  load([`modules/${MODULE_ID}/templates/library.hbs`, `modules/${MODULE_ID}/templates/finder.hbs`]).catch(err =>
+  load([
+    `modules/${MODULE_ID}/templates/library.hbs`,
+    `modules/${MODULE_ID}/templates/finder.hbs`,
+    `modules/${MODULE_ID}/templates/reader.hbs`
+  ]).catch(err =>
     log.error("preloading the templates failed", err)
   );
 });
@@ -140,6 +145,12 @@ for (const hook of ["createFolder", "updateFolder", "deleteFolder"]) {
     if (folder.type === "JournalEntry") refresh();
   });
 }
+// A Reader follows its page: an edit redraws it, a page gone or no longer visible closes it.
+Hooks.on("updateJournalEntryPage", page => Reader.refresh(page));
+Hooks.on("deleteJournalEntryPage", page => Reader.closeFor(page));
+Hooks.on("updateJournalEntry", entry => {
+  for (const page of entry.pages) Reader.refresh(page);
+});
 Hooks.on("userConnected", refresh);
 Hooks.on("updateUser", (_user, changes) => {
   if ("role" in changes || "name" in changes || "character" in changes) refresh();

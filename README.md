@@ -33,7 +33,10 @@ journal back on any client at any time. Switch it off and every journal is exact
 - **The detail panel.** Click a card: the picture large, where it lives, its section (or a new one), *Players can
   see* (everyone, or player by player: the page's own ownership), when this browser last showed it and *Show
   again* to the same players, *Show the picture* for a text page with one, *Pin*, *Open in journal* for editing,
-  and *Copy link* (its `@UUID`). Enter or a second click opens the picture to look at.
+  and *Copy link* (its `@UUID`). Enter or a second click opens it in the Reader.
+- **The Reader.** One page, simply: its name, its picture and its text in a plain window, with no page list and
+  no journal around it (a PDF opens in the journal). It follows the page as it is edited, and a player's never
+  shows a secret section.
 - **Not in a journal.** The pictures in the world's asset folders that no page uses yet (handouts, journal
   images, maps, portraits; the *Asset folders* setting). The search in *All* finds them too. Show one as a bare
   popout, or **Add to the Handouts journal**: an ordinary image page, GM only until shown.
@@ -43,7 +46,7 @@ journal back on any client at any time. Switch it off and every journal is exact
   last.
 - **Players.** The Journal button opens the player's own Handouts: what they can see, *Recently shown* first
   (what the GM showed them, heard from Foundry's own show events), the unopened marked **New**, *Mark all seen*.
-  A click opens the page. A player never sees text from a page's unrevealed secret sections, nor the name or
+  A click opens the page in the Reader. A player never sees text from a page's unrevealed secret sections, nor the name or
   folder of a journal hidden from them. Players have Classic Mode too.
 
 ### What it writes, and where

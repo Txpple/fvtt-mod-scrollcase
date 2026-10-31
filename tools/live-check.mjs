@@ -343,6 +343,26 @@ try {
     );
     console.log(`  journals on the player's client: ${D1.journalsOnClient}`);
 
+    const R = await fp.evaluate(async () => {
+      const letter = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === "ZZ-HDT Letter");
+      const win = foundry.applications.instances.get("handouts-library");
+      win.element.querySelector('.hdt-row[data-view="all"]')?.click();
+      await new Promise(r => setTimeout(r, 300));
+      win.element.querySelector(`.hdt-card[data-key="${letter.uuid}"] [data-action="pick"]`)?.click();
+      let reader = null;
+      for (let i = 0; i < 40 && !reader?.rendered; i++) {
+        await new Promise(r => setTimeout(r, 100));
+        reader = foundry.applications.instances.get(`handouts-reader-${letter.id}`);
+      }
+      const text = reader?.element?.textContent ?? "";
+      const sheet = [...foundry.applications.instances.values()].some(a => a.document?.documentName === "JournalEntry" && a.rendered);
+      await reader?.close();
+      return { opened: !!reader?.rendered || text.length > 0, title: /ZZ-HDT Letter/.test(text), body: /A letter for the/.test(text), secret: /ZZSECRETWORD/.test(text), sheet };
+    });
+    assert(R.opened && R.title && R.body, "a player's click on a card opens the Reader: the page's name and its text");
+    assert(!R.secret, "the Reader never shows the page's secret section to the player");
+    assert(!R.sheet, "no journal sheet opens for it");
+
     await f.evaluate(
       async ({ uuid, userId }) => {
         const page = await fromUuid(uuid);
