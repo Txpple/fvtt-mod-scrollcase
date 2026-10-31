@@ -11,7 +11,7 @@
  */
 
 import { log, MODULE_ID, setting, t } from "./common.js";
-import { kindOf, LINK_PARAM, linkedPage, pageLink, withoutLink } from "./decide/scrollcase.js";
+import { kindOf, LINK_PARAM, linkedPage, mendViewClass, pageLink, withoutLink } from "./decide/scrollcase.js";
 import { Finder } from "./finder.js";
 import { ScrollCaseWindow, openClassicJournal } from "./library.js";
 import * as memory from "./memory.js";
@@ -21,6 +21,19 @@ import * as show from "./show.js";
 export { MODULE_ID, log, t, setting };
 
 const DIRECTORY_BUTTON = "scrollcase-directory-button";
+
+// A page link's query reaches Foundry's server, which names the body's view class from the whole
+// address (`game?page=…`, not `game`): the interface loses its layout. Mended as this script loads,
+// before the game draws anything; the link itself is read at `ready`.
+try {
+  const { remove, add } = mendViewClass(document.body?.classList ?? []);
+  if (remove.length) {
+    document.body.classList.remove(...remove);
+    document.body.classList.add(...add);
+  }
+} catch (err) {
+  log.error("mending the body's view class failed", err);
+}
 
 /** The module's window replaces the Journal tab here: enabled for the world, not Classic on this client. */
 const takesOver = () => setting("enabled") && !setting("classic");

@@ -351,3 +351,14 @@ export function withoutLink(href) {
   url.searchParams.delete(LINK_PARAM);
   return url.href;
 }
+
+/**
+ * The body classes Foundry's server wrote for an address with a query: it names the view class
+ * from the whole address (`game?page=…`), so every `body.game` rule misses. What to take out and
+ * put in; nothing when the classes are right.
+ * @param {Iterable<string>} classes
+ */
+export function mendViewClass(classes) {
+  const remove = [...classes].filter(c => /^[a-z]+\?/.test(c));
+  return { remove, add: [...new Set(remove.map(c => c.slice(0, c.indexOf("?"))))] };
+}

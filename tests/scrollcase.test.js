@@ -13,6 +13,7 @@ import {
   LEVEL,
   levelOf,
   matchWhy,
+  mendViewClass,
   normPath,
   pageLink,
   pictureOf,
@@ -342,5 +343,18 @@ describe("page links", () => {
     expect(withoutLink(`https://example.test/game?a=1&page=${uuid}#x`)).toBe(
       "https://example.test/game?a=1#x"
     );
+  });
+});
+
+describe("mendViewClass", () => {
+  it("puts the view back from a class the query spoiled", () => {
+    expect(mendViewClass(["vtt", "game?page=JournalEntry.x", "system-dnd5e"])).toEqual({
+      remove: ["game?page=JournalEntry.x"],
+      add: ["game"]
+    });
+  });
+
+  it("leaves right classes alone", () => {
+    expect(mendViewClass(["vtt", "game", "system-dnd5e"])).toEqual({ remove: [], add: [] });
   });
 });

@@ -47,7 +47,9 @@ page's web link (`/game?page=<uuid>`), walked on the sandbox through the join sc
 - **A page's web link** is `/game?page=<uuid>` on the game's own address: Foundry's login keeps a `/game` address
   through the join screen (`gameRedirect`) and returns to it, and at `ready` `openLinked` opens the page as a card
   would, only for a user who may see it, then takes the parameter out of the address bar. Nothing is stored; a
-  page the user cannot see, or anything not a page's uuid, gets a notice and opens nothing.
+  page the user cannot see, or anything not a page's uuid, gets a notice and opens nothing. Foundry's server names
+  the body's view class from the whole address (`vtt game?page=…`), which takes the interface's layout with it:
+  `mendViewClass`, run as the entry script loads, puts `game` back before anything draws.
 - **The search never redraws**: it filters the drawn cards from a JS map of their fields, so the caret and the
   scroll stay; a redraw reapplies it. Focus is put back where it was (the card, the panel, the options). The finder
   redraws only its list.
@@ -58,7 +60,7 @@ page's web link (`/game?page=<uuid>`), walked on the sandbox through the join sc
   `allImages`, `pictureOf`, `stripSecrets`, `withoutImages`, paths (`fileName`, `folderOf`, `prettyName`,
   `normPath`, `samePath`, `isImageFile`, `folderList`), `matchWhy`, `searchFields`, `levelOf`, `visibilityWrite`,
   `whoSees`, `sameIds`, `remember`, the export (`exportName`, `exportOf`), the link (`pageLink`, `linkedPage`,
-  `withoutLink`). Tested in `tests/scrollcase.test.js`.
+  `withoutLink`, `mendViewClass`). Tested in `tests/scrollcase.test.js`.
 - `scripts/common.js`: the id, the logger, `t`, `setting`.
 - `scripts/scrollcase.js`: the entry point; the settings and the keybinding at `init`; the Journal button and the
   directory's way back; the refresh hooks; the players' show listeners, a linked page opened, the stylesheet probe,
