@@ -6,11 +6,11 @@ Journal button opens it, Classic Mode puts the stock journal back per client. Pa
 is `..`, its CLAUDE.md has the family's conventions; the plan is `../docs/plans/scrollcase.md`). Plain ES modules,
 no build step, no libWrapper, no socketlib, MIT.
 
-**State (2026-10-30).** 1.0.0, the first release, named Scroll Case on the user's word (built as "Handouts" the same
+**State (2026-10-30).** 1.0.1 (the JSON export of the cards in view: the head's button, text only, no pictures),
+released; prod runs 1.0.0. 1.0.0, the first release, named Scroll Case on the user's word (built as "Handouts" the same
 evening; the setup screen's `getPackages`, 7,086 modules, has no "Scroll Case" and no `scrollcase`). Before it, two
 adversarial review passes (four Opus reviewers) and a third on Playwright screenshots, every finding fixed; the
-Reader (a card's page simply) and a Show opening in it followed on the user's word. Unreleased on `main`: the
-JSON export of the cards in view (the head's button, text only, no pictures), on the sandbox. `npm run verify`
+Reader (a card's page simply) and a Show opening in it followed on the user's word. `npm run verify`
 green (79 tests); `tools/live-check.mjs --walk` GREEN on the sandbox (43 checks).
 
 ## The rules this module keeps
