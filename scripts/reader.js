@@ -9,22 +9,22 @@
  */
 
 import { log, MODULE_ID, t } from "./common.js";
-import { kindOf, prettyName } from "./decide/handouts.js";
+import { kindOf, prettyName } from "./decide/scrollcase.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-const idFor = page => `handouts-reader-${page.id}`;
+const idFor = page => `scrollcase-reader-${page.id}`;
 
 /** A short, stable id for a picture's Reader, from its path. */
 function idForSrc(src) {
   let h = 0;
   for (const c of String(src)) h = (Math.imul(h, 31) + c.codePointAt(0)) | 0;
-  return `handouts-reader-file-${(h >>> 0).toString(36)}`;
+  return `scrollcase-reader-file-${(h >>> 0).toString(36)}`;
 }
 
 export class Reader extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
-    classes: ["handouts-reader"],
+    classes: ["scrollcase-reader"],
     window: { icon: "fa-solid fa-book-open-reader", resizable: true },
     position: { width: 680, height: "auto" },
     actions: { openJournal: Reader.#onOpenJournal }

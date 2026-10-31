@@ -5,9 +5,9 @@
 
 import { createLogger } from "./kit/log.js";
 
-export const MODULE_ID = "fvtt-mod-handouts";
+export const MODULE_ID = "fvtt-mod-scrollcase";
 
-/** Every line opens with the module's title; debug lines need CONFIG.debug["fvtt-mod-handouts"]. */
+/** Every line opens with the module's title; debug lines need CONFIG.debug["fvtt-mod-scrollcase"]. */
 export const log = createLogger(MODULE_ID);
 
 /** A string from lang/en.json, under this module's key; with data, formatted. */

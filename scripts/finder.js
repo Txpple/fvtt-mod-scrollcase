@@ -8,8 +8,8 @@
  */
 
 import { log, MODULE_ID, setting, t } from "./common.js";
-import { matchWhy, searchFields } from "./decide/handouts.js";
-import { fileCards, HandoutsWindow, loadFiles, pageCards } from "./library.js";
+import { matchWhy, searchFields } from "./decide/scrollcase.js";
+import { fileCards, ScrollCaseWindow, loadFiles, pageCards } from "./library.js";
 import * as memory from "./memory.js";
 import * as show from "./show.js";
 
@@ -23,8 +23,8 @@ const esc = s => foundry.utils.escapeHTML?.(String(s ?? "")) ?? String(s ?? "").
 
 export class Finder extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
-    id: "handouts-finder",
-    classes: ["handouts-finder"],
+    id: "scrollcase-finder",
+    classes: ["scrollcase-finder"],
     window: { title: `${MODULE_ID}.finder.title`, icon: "fa-solid fa-magnifying-glass", resizable: false, minimizable: false },
     position: { width: 640, height: "auto", top: 90 }
   };
@@ -139,7 +139,7 @@ export class Finder extends HandlebarsApplicationMixin(ApplicationV2) {
             const sub = [where, t(`kind.${card.kind}`), who].filter(Boolean).join(" · ");
             const thumb = card.picture ? `<img src="${esc(card.picture)}" alt="" loading="lazy">` : `<i class="fa-solid ${ICON[card.kind]}" inert></i>`;
             const enter = !gm ? t("finder.enterOpen") : hidden && keeps ? t("finder.enterReveal") : t("finder.enterShow");
-            return `<li class="hdt-res${on ? " on" : ""}" id="handouts-finder-row-${index}" data-index="${index}" role="option" aria-selected="${on}">
+            return `<li class="hdt-res${on ? " on" : ""}" id="scrollcase-finder-row-${index}" data-index="${index}" role="option" aria-selected="${on}">
               <span class="hdt-res-th">${thumb}</span>
               <span class="hdt-res-tx"><span class="hdt-res-nm">${esc(card.name)}</span><span class="hdt-res-sub">${esc(sub)}${why ? ` <span class="hdt-why">· ${esc(t(`why.${why}`))}</span>` : ""}</span></span>
               ${on ? `<span class="hdt-res-go"><kbd>Enter</kbd> ${esc(enter)}</span>` : ""}
@@ -152,7 +152,7 @@ export class Finder extends HandlebarsApplicationMixin(ApplicationV2) {
     const list = this.element.querySelector(".hdt-results");
     list.innerHTML = html || `<li class="hdt-res-none" role="presentation">${esc(this.#query.trim() ? t("finder.none") : t("finder.empty"))}</li>`;
     const input = this.element.querySelector("input[name=find]");
-    if (this.#rows.length) input.setAttribute("aria-activedescendant", `handouts-finder-row-${this.#at}`);
+    if (this.#rows.length) input.setAttribute("aria-activedescendant", `scrollcase-finder-row-${this.#at}`);
     else input.removeAttribute("aria-activedescendant");
     list.querySelector(".hdt-res.on")?.scrollIntoView({ block: "nearest" });
   }
@@ -196,19 +196,19 @@ export class Finder extends HandlebarsApplicationMixin(ApplicationV2) {
       if (!game.user.isGM) {
         show.openForReading(card.page);
         memory.noteSeen(card.key);
-        return HandoutsWindow.refresh();
+        return ScrollCaseWindow.refresh();
       }
-      if (how === "options") return HandoutsWindow.open({ key: card.key, opts: true });
+      if (how === "options") return ScrollCaseWindow.open({ key: card.key, opts: true });
       const online = show.onlinePlayers().length;
       const keep = setting("showKeeps");
       let revealed = false;
       if (card.loose) revealed = !!(await show.showFile(card.key, { keep }));
       else revealed = !!(await show.showPage(card.page, { keep }))?.revealed;
-      // The reveal's Undo lives in the Handouts window's strip; the toast says where.
+      // The reveal's Undo lives in the Scroll Case window's strip; the toast says where.
       if (revealed) ui.notifications.info(t("show.revealedFinder", { name: card.name }));
       if (!online) ui.notifications.warn(t("show.nobodyOnline", { name: card.name }));
       else ui.notifications.info(t("show.sent", { name: card.name, whom: t("show.everyone") }));
-      HandoutsWindow.refresh();
+      ScrollCaseWindow.refresh();
     } catch (err) {
       log.error("the finder's action failed", err);
       ui.notifications.error(t("error.show", { name: card.name }));

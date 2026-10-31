@@ -19,7 +19,7 @@ if (process.env.FOUNDRY_HOST !== "local") {
 }
 
 const env = loadEnv();
-const MODULE_ID = "fvtt-mod-handouts";
+const MODULE_ID = "fvtt-mod-scrollcase";
 const TEMP_USER = "ZZ-HDT Player";
 const SCRATCH = "ZZ-HDT Scratch";
 const SCRATCH_KEEP = "ZZ-HDT Handouts";
@@ -42,7 +42,7 @@ function watch(f, label, sink) {
   page.on("console", msg => {
     const text = msg.text();
     const type = msg.type();
-    if (type === "error" || type === "warning" || /handouts/i.test(text)) sink.push(`[${label} ${type}] ${text}`);
+    if (type === "error" || type === "warning" || /scroll ?case/i.test(text)) sink.push(`[${label} ${type}] ${text}`);
   });
   page.on("pageerror", err => sink.push(`[${label} pageerror] ${err?.message ?? err}`));
   page.on("response", res => {
@@ -52,14 +52,14 @@ function watch(f, label, sink) {
 
 let cleanup = async () => {};
 setTimeout(async () => {
-  console.error("[handouts] WATCHDOG: 240s elapsed, cleaning up and aborting");
+  console.error("[scrollcase] WATCHDOG: 240s elapsed, cleaning up and aborting");
   await cleanup().catch(() => {});
   process.exit(3);
 }, 240_000).unref();
 
 const lines = [];
 const f = new Foundry(foundryConfig(env));
-console.log("[handouts] connecting as the GM…");
+console.log("[scrollcase] connecting as the GM…");
 await f.connect();
 watch(f, "gm", lines);
 await f.page.setViewportSize?.({ width: 1600, height: 1000 }).catch(() => {});
@@ -80,7 +80,7 @@ cleanup = async () => {
           await game.settings.set(id, "classic", prior.classic);
         }
         for (const app of [...foundry.applications.instances.values()]) {
-          if (["handouts-library", "handouts-finder"].includes(app.id) || app.id?.startsWith("handouts-reader-") || app.constructor.name === "ImagePopout") await app.close();
+          if (["scrollcase-library", "scrollcase-finder"].includes(app.id) || app.id?.startsWith("scrollcase-reader-") || app.constructor.name === "ImagePopout") await app.close();
         }
       },
       { id: MODULE_ID, scratch: SCRATCH, keep: SCRATCH_KEEP, userName: TEMP_USER, prior }
@@ -93,11 +93,11 @@ const settle = ms => new Promise(r => setTimeout(r, ms));
 
 try {
   // --- A. the takeover ----------------------------------------------------------------------
-  console.log("# A. the Journal button opens Handouts");
+  console.log("# A. the Journal button opens Scroll Case");
   const A = await f.evaluate(async id => {
     const m = game.modules.get(id);
     await game.settings.set(id, "classic", false);
-    for (const app of [...foundry.applications.instances.values()]) if (app.id === "handouts-library") await app.close();
+    for (const app of [...foundry.applications.instances.values()]) if (app.id === "scrollcase-library") await app.close();
     const before = { tab: ui.sidebar.tabGroups.primary, expanded: ui.sidebar.expanded };
     const strip = [...document.querySelectorAll("#sidebar-tabs [data-tab], #sidebar nav.tabs [data-tab]")].map(b => b.dataset.tab);
     const button = document.querySelector('#sidebar-tabs [data-tab="journal"]');
@@ -105,19 +105,19 @@ try {
     let win = null;
     for (let i = 0; i < 40 && !win?.rendered; i++) {
       await new Promise(r => setTimeout(r, 100));
-      win = foundry.applications.instances.get("handouts-library");
+      win = foundry.applications.instances.get("scrollcase-library");
     }
     const after = { tab: ui.sidebar.tabGroups.primary, expanded: ui.sidebar.expanded };
     const el = win?.element;
     const pages = game.journal.contents.reduce((n, j) => n + j.pages.size, 0);
     for (let i = 0; i < 60 && el?.querySelector(".hdt-loading"); i++) await new Promise(r => setTimeout(r, 150));
-    // A middle click on the Journal button is the sidebar's too: it must open Handouts, not the tab.
+    // A middle click on the Journal button is the sidebar's too: it must open Scroll Case, not the tab.
     await win?.close();
     button?.dispatchEvent(new MouseEvent("auxclick", { button: 1, bubbles: true, cancelable: true }));
     let mid = null;
     for (let i = 0; i < 30 && !mid?.rendered; i++) {
       await new Promise(r => setTimeout(r, 100));
-      mid = foundry.applications.instances.get("handouts-library");
+      mid = foundry.applications.instances.get("scrollcase-library");
     }
     const midStill = ui.sidebar.tabGroups.primary === before.tab && ui.sidebar.expanded === before.expanded;
     return {
@@ -140,9 +140,9 @@ try {
   }, MODULE_ID);
   assert(A.active && A.api, `the module is active, its API set (v${A.version})`);
   assert(A.keybinding, "the finder's keybinding is registered");
-  assert(A.opened, "a click on the Journal button opens the Handouts window");
+  assert(A.opened, "a click on the Journal button opens the Scroll Case window");
   assert(A.sidebarStill, "the sidebar did not switch tabs or expand");
-  assert(A.middle, "a middle click on the Journal button opens Handouts too, the sidebar unchanged");
+  assert(A.middle, "a middle click on the Journal button opens Scroll Case too, the sidebar unchanged");
   assert(A.pageCards === A.pages, `one card per journal page (${A.pageCards} of ${A.pages})`);
   assert(A.fileCards > 0, `the asset folders give file cards (${A.fileCards})`);
   assert(A.classicButton, "the window carries Classic Mode");
@@ -151,7 +151,7 @@ try {
   // --- B. the search ------------------------------------------------------------------------
   console.log("# B. the search");
   const B = await f.evaluate(async () => {
-    const win = foundry.applications.instances.get("handouts-library");
+    const win = foundry.applications.instances.get("scrollcase-library");
     const input = win.element.querySelector("input[name=search]");
     const type = async q => {
       input.value = q;
@@ -203,7 +203,7 @@ try {
         });
         const picture = entry.pages.find(p => p.type === "image");
         const letter = entry.pages.find(p => p.type === "text");
-        const win = foundry.applications.instances.get("handouts-library");
+        const win = foundry.applications.instances.get("scrollcase-library");
         const pageCardsPicture = uuid => win.element.querySelector(`.hdt-card[data-key="${uuid}"] .hdt-thumb img`);
         const wait = async pred => {
           for (let i = 0; i < 40; i++) {
@@ -283,9 +283,9 @@ try {
     assert(C.keptGone, "the kept file is no longer listed as on no page");
 
     // --- D. a player ---------------------------------------------------------------------
-    console.log("# D. a player's Handouts, and a Show reaching them");
+    console.log("# D. a player's Scroll Case, and a Show reaching them");
     fp = new Foundry({ ...foundryConfig(env), user: TEMP_USER, password: "" });
-    console.log("[handouts] connecting as the player…");
+    console.log("[scrollcase] connecting as the player…");
     await fp.connect();
     watch(fp, "player", lines);
     const D1 = await fp.evaluate(async () => {
@@ -293,7 +293,7 @@ try {
       let win = null;
       for (let i = 0; i < 40 && !win?.rendered; i++) {
         await new Promise(r => setTimeout(r, 100));
-        win = foundry.applications.instances.get("handouts-library");
+        win = foundry.applications.instances.get("scrollcase-library");
       }
       const visible = game.journal.contents.flatMap(j => j.pages.contents).filter(p => p.testUserPermission(game.user, "OBSERVER")).length;
       const view = win?.element.querySelector(".hdt-row.on")?.dataset.view;
@@ -334,7 +334,7 @@ try {
         secret
       };
     });
-    assert(D1.opened, "the player's Journal button opens their Handouts");
+    assert(D1.opened, "the player's Journal button opens their Scroll Case");
     assert(D1.cards === D1.visible, `the player sees exactly the pages they can observe (${D1.cards} of ${D1.visible})`);
     assert(D1.noShow && D1.noFiles, "no Show buttons and no files for a player");
     assert(D1.classic, "the player has Classic Mode too");
@@ -346,14 +346,14 @@ try {
 
     const R = await fp.evaluate(async () => {
       const letter = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === "ZZ-HDT Letter");
-      const win = foundry.applications.instances.get("handouts-library");
+      const win = foundry.applications.instances.get("scrollcase-library");
       win.element.querySelector('.hdt-row[data-view="all"]')?.click();
       await new Promise(r => setTimeout(r, 300));
       win.element.querySelector(`.hdt-card[data-key="${letter.uuid}"] [data-action="pick"]`)?.click();
       let reader = null;
       for (let i = 0; i < 40 && !reader?.rendered; i++) {
         await new Promise(r => setTimeout(r, 100));
-        reader = foundry.applications.instances.get(`handouts-reader-${letter.id}`);
+        reader = foundry.applications.instances.get(`scrollcase-reader-${letter.id}`);
       }
       const text = reader?.element?.textContent ?? "";
       const sheet = [...foundry.applications.instances.values()].some(a => a.document?.documentName === "JournalEntry" && a.rendered);
@@ -367,7 +367,7 @@ try {
     await f.evaluate(
       async ({ uuid, userId }) => {
         const page = await fromUuid(uuid);
-        const win = foundry.applications.instances.get("handouts-library");
+        const win = foundry.applications.instances.get("scrollcase-library");
         win.select(uuid, { opts: true });
         await win.render();
         win.element.querySelector(`.hdt-opts [data-action="optUser"][data-user="${userId}"]`)?.click();
@@ -380,12 +380,12 @@ try {
     await settle(1200);
     const D2 = await fp.evaluate(async uuid => {
       const page = await fromUuid(uuid);
-      const reader = foundry.applications.instances.get(`handouts-reader-${page.id}`);
+      const reader = foundry.applications.instances.get(`scrollcase-reader-${page.id}`);
       const stock = [...foundry.applications.instances.values()].some(
         a => (a.constructor.name === "ImagePopout" || a.document?.documentName === "JournalEntry") && a.rendered
       );
-      const record = game.modules.get("fvtt-mod-handouts").api.memory.load();
-      const win = foundry.applications.instances.get("handouts-library");
+      const record = game.modules.get("fvtt-mod-scrollcase").api.memory.load();
+      const win = foundry.applications.instances.get("scrollcase-library");
       win?.element.querySelector('.hdt-row[data-view="recent"]')?.click();
       await new Promise(r => setTimeout(r, 400));
       const card = win?.element.querySelector(`.hdt-card[data-key="${uuid}"]`);
@@ -405,11 +405,11 @@ try {
       async ({ uuid, userId }) => (await fromUuid(uuid)).testUserPermission(game.users.get(userId), "OBSERVER"),
       { uuid: C.pictureUuid, userId: temp.userId }
     );
-    assert(D3, "Keep it in their Handouts left the page visible to that player");
+    assert(D3, "Keep it in their Scroll Case left the page visible to that player");
     const D4 = await f.evaluate(
       async ({ uuid, userId }) => {
         const page = await fromUuid(uuid);
-        const win = foundry.applications.instances.get("handouts-library");
+        const win = foundry.applications.instances.get("scrollcase-library");
         const undo = win.element.querySelector('.hdt-reveal [data-action="undo"]');
         undo?.click();
         for (let i = 0; i < 40 && page.testUserPermission(game.users.get(userId), "OBSERVER"); i++) await new Promise(r => setTimeout(r, 100));
@@ -422,42 +422,42 @@ try {
     // --- E. Classic Mode ---------------------------------------------------------------
     console.log("# E. Classic Mode, there and back");
     const E = await f.evaluate(async id => {
-      const win = foundry.applications.instances.get("handouts-library");
+      const win = foundry.applications.instances.get("scrollcase-library");
       win.element.querySelector('[data-action="classic"]')?.click();
       await new Promise(r => setTimeout(r, 900));
       const classic = game.settings.get(id, "classic");
       const closed = !win.rendered;
       const tab = ui.sidebar.tabGroups.primary;
-      const back = document.getElementById("handouts-directory-button");
+      const back = document.getElementById("scrollcase-directory-button");
       // with Classic on, the Journal button is Foundry's again
       ui.sidebar.changeTab("chat", "primary");
       document.querySelector('#sidebar-tabs [data-tab="journal"]')?.click();
       await new Promise(r => setTimeout(r, 500));
       const stockTab = ui.sidebar.tabGroups.primary;
-      const stayedClosed = !foundry.applications.instances.get("handouts-library")?.rendered;
-      const back2 = document.getElementById("handouts-directory-button");
+      const stayedClosed = !foundry.applications.instances.get("scrollcase-library")?.rendered;
+      const back2 = document.getElementById("scrollcase-directory-button");
       back2?.click();
       let reopened = false;
       for (let i = 0; i < 40 && !reopened; i++) {
         await new Promise(r => setTimeout(r, 100));
-        reopened = !!foundry.applications.instances.get("handouts-library")?.rendered;
+        reopened = !!foundry.applications.instances.get("scrollcase-library")?.rendered;
       }
       return { classic, closed, tab, back: !!back, stockTab, stayedClosed, reopened, classicAfter: game.settings.get(id, "classic") };
     }, MODULE_ID);
     assert(E.classic && E.closed && E.tab === "journal", "Classic Mode closes the window and opens Foundry's Journal tab");
-    assert(E.back, "the stock directory carries the Handouts button");
+    assert(E.back, "the stock directory carries the Scroll Case button");
     assert(E.stockTab === "journal" && E.stayedClosed, "in Classic Mode the Journal button is Foundry's own");
-    assert(E.reopened && E.classicAfter === false, "the directory's Handouts button turns Classic off and opens the window");
+    assert(E.reopened && E.classicAfter === false, "the directory's Scroll Case button turns Classic off and opens the window");
 
     // --- F. the finder -------------------------------------------------------------------
     console.log("# F. the finder");
     const F = await f.evaluate(async uuid => {
-      const api = game.modules.get("fvtt-mod-handouts").api;
+      const api = game.modules.get("fvtt-mod-scrollcase").api;
       await api.finder();
       let app = null;
       for (let i = 0; i < 30 && !app?.rendered; i++) {
         await new Promise(r => setTimeout(r, 100));
-        app = foundry.applications.instances.get("handouts-finder");
+        app = foundry.applications.instances.get("scrollcase-finder");
       }
       const input = app.element.querySelector("input[name=find]");
       const focused = document.activeElement === input;
@@ -489,11 +489,11 @@ try {
       await f.page.screenshot({ path: `${shots}/${name}.png` });
     };
     await shot("1-library", async () => {
-      const win = game.modules.get("fvtt-mod-handouts").api.open();
+      const win = game.modules.get("fvtt-mod-scrollcase").api.open();
       for (let i = 0; i < 30 && !win.rendered; i++) await new Promise(r => setTimeout(r, 100));
     });
     await shot("2-loose", async () => {
-      foundry.applications.instances.get("handouts-library").element.querySelector('.hdt-row[data-view="loose"]')?.click();
+      foundry.applications.instances.get("scrollcase-library").element.querySelector('.hdt-row[data-view="loose"]')?.click();
     });
     console.log("  written");
   }
@@ -502,7 +502,7 @@ try {
 }
 
 console.log("# console");
-const ours = lines.filter(l => /handouts/i.test(l) && !/http 404/.test(l) && /error|pageerror/.test(l));
+const ours = lines.filter(l => /scroll ?case/i.test(l) && !/http 404/.test(l) && /error|pageerror/.test(l));
 for (const l of lines.filter(l => !/http 404/.test(l)).slice(0, 40)) console.log(`  ${l}`);
 assert(ours.length === 0, `no errors of the module's on either page (${ours.length})`);
 console.log(fails ? `RED (${fails} failed)` : "GREEN");

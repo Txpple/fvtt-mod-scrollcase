@@ -1,20 +1,20 @@
 <div class="hdt-finder">
   <label class="hdt-search hdt-finder-box">
     <i class="fa-solid fa-magnifying-glass" inert></i>
-    <input type="search" name="find" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="handouts-finder-results" aria-autocomplete="list"
-      placeholder="{{#if isGM}}{{localize 'fvtt-mod-handouts.finder.placeholder'}}{{else}}{{localize 'fvtt-mod-handouts.finder.placeholderPlayer'}}{{/if}}"
-      aria-label="{{localize 'fvtt-mod-handouts.finder.title'}}">
+    <input type="search" name="find" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="scrollcase-finder-results" aria-autocomplete="list"
+      placeholder="{{#if isGM}}{{localize 'fvtt-mod-scrollcase.finder.placeholder'}}{{else}}{{localize 'fvtt-mod-scrollcase.finder.placeholderPlayer'}}{{/if}}"
+      aria-label="{{localize 'fvtt-mod-scrollcase.finder.title'}}">
     <kbd>Esc</kbd>
   </label>
-  <ul class="hdt-results" id="handouts-finder-results" role="listbox"></ul>
+  <ul class="hdt-results" id="scrollcase-finder-results" role="listbox"></ul>
   <div class="hdt-finder-foot">
-    <span><kbd>↑</kbd> <kbd>↓</kbd> {{localize "fvtt-mod-handouts.finder.move"}}</span>
+    <span><kbd>↑</kbd> <kbd>↓</kbd> {{localize "fvtt-mod-scrollcase.finder.move"}}</span>
     {{#if isGM}}
-    <span><kbd>Enter</kbd> {{localize "fvtt-mod-handouts.finder.enterShow"}}</span>
-    <span><kbd>Shift</kbd> <kbd>Enter</kbd> {{localize "fvtt-mod-handouts.finder.shiftEnter"}}</span>
+    <span><kbd>Enter</kbd> {{localize "fvtt-mod-scrollcase.finder.enterShow"}}</span>
+    <span><kbd>Shift</kbd> <kbd>Enter</kbd> {{localize "fvtt-mod-scrollcase.finder.shiftEnter"}}</span>
     {{else}}
-    <span><kbd>Enter</kbd> {{localize "fvtt-mod-handouts.finder.enterOpen"}}</span>
+    <span><kbd>Enter</kbd> {{localize "fvtt-mod-scrollcase.finder.enterOpen"}}</span>
     {{/if}}
-    <span><kbd>Ctrl</kbd> <kbd>Enter</kbd> {{localize "fvtt-mod-handouts.finder.ctrlEnter"}}</span>
+    <span><kbd>Ctrl</kbd> <kbd>Enter</kbd> {{localize "fvtt-mod-scrollcase.finder.ctrlEnter"}}</span>
   </div>
 </div>

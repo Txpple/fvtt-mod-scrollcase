@@ -1,5 +1,5 @@
 /**
- * The Handouts window: the journal as cards. The DM's view has a rail (the views, the journals by
+ * The Scroll Case window: the journal as cards. The DM's view has a rail (the views, the journals by
  * folder with their sections), the cards, a detail panel and Show; a player's view is what they
  * can see, newest shown first, the unopened marked New. Everything it draws is read live from
  * Foundry's journal; the only state of its own is the browser's (memory.js).
@@ -24,7 +24,7 @@ import {
   prettyName,
   searchFields,
   stripSecrets
-} from "./decide/handouts.js";
+} from "./decide/scrollcase.js";
 import * as memory from "./memory.js";
 import * as show from "./show.js";
 
@@ -155,7 +155,7 @@ export function loadFiles(force = false) {
     } finally {
       filesLoading = null;
     }
-    HandoutsWindow.refresh();
+    ScrollCaseWindow.refresh();
     return files;
   })();
   return filesLoading;
@@ -215,41 +215,41 @@ function showAs(card, who) {
 /** "1 page", "3 pages": the count keys have a one and a many. */
 const counted = (n, base) => t(n === 1 ? `${base}One` : base, { n });
 
-export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
+export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   static DEFAULT_OPTIONS = {
-    id: "handouts-library",
-    classes: ["handouts-library"],
+    id: "scrollcase-library",
+    classes: ["scrollcase-library"],
     window: { title: `${MODULE_ID}.library.title`, icon: "fa-solid fa-images", resizable: true },
     position: { width: 1180, height: 800 },
     actions: {
-      type: HandoutsWindow.#onType,
-      size: HandoutsWindow.#onSize,
-      view: HandoutsWindow.#onView,
-      searchAll: HandoutsWindow.#onSearchAll,
-      pick: HandoutsWindow.#onPick,
-      quickShow: HandoutsWindow.#onQuickShow,
-      showPicture: HandoutsWindow.#onShowPicture,
-      openOpts: HandoutsWindow.#onOpenOpts,
-      optAll: HandoutsWindow.#onOptAll,
-      optUser: HandoutsWindow.#onOptUser,
-      optKeep: HandoutsWindow.#onOptKeep,
-      optPicture: HandoutsWindow.#onOptPicture,
-      optTitle: HandoutsWindow.#onOptTitle,
-      optCaption: HandoutsWindow.#onOptCaption,
-      optGo: HandoutsWindow.#onOptGo,
-      optCancel: HandoutsWindow.#onOptCancel,
-      pin: HandoutsWindow.#onPin,
-      openJournal: HandoutsWindow.#onOpenJournal,
-      copyLink: HandoutsWindow.#onCopyLink,
-      keep: HandoutsWindow.#onKeep,
-      undo: HandoutsWindow.#onUndo,
-      dismissReveal: HandoutsWindow.#onDismissReveal,
-      showAgain: HandoutsWindow.#onShowAgain,
-      markSeen: HandoutsWindow.#onMarkSeen,
-      seeAll: HandoutsWindow.#onSeeAll,
-      seeUser: HandoutsWindow.#onSeeUser,
-      classic: HandoutsWindow.#onClassic,
-      rescan: HandoutsWindow.#onRescan
+      type: ScrollCaseWindow.#onType,
+      size: ScrollCaseWindow.#onSize,
+      view: ScrollCaseWindow.#onView,
+      searchAll: ScrollCaseWindow.#onSearchAll,
+      pick: ScrollCaseWindow.#onPick,
+      quickShow: ScrollCaseWindow.#onQuickShow,
+      showPicture: ScrollCaseWindow.#onShowPicture,
+      openOpts: ScrollCaseWindow.#onOpenOpts,
+      optAll: ScrollCaseWindow.#onOptAll,
+      optUser: ScrollCaseWindow.#onOptUser,
+      optKeep: ScrollCaseWindow.#onOptKeep,
+      optPicture: ScrollCaseWindow.#onOptPicture,
+      optTitle: ScrollCaseWindow.#onOptTitle,
+      optCaption: ScrollCaseWindow.#onOptCaption,
+      optGo: ScrollCaseWindow.#onOptGo,
+      optCancel: ScrollCaseWindow.#onOptCancel,
+      pin: ScrollCaseWindow.#onPin,
+      openJournal: ScrollCaseWindow.#onOpenJournal,
+      copyLink: ScrollCaseWindow.#onCopyLink,
+      keep: ScrollCaseWindow.#onKeep,
+      undo: ScrollCaseWindow.#onUndo,
+      dismissReveal: ScrollCaseWindow.#onDismissReveal,
+      showAgain: ScrollCaseWindow.#onShowAgain,
+      markSeen: ScrollCaseWindow.#onMarkSeen,
+      seeAll: ScrollCaseWindow.#onSeeAll,
+      seeUser: ScrollCaseWindow.#onSeeUser,
+      classic: ScrollCaseWindow.#onClassic,
+      rescan: ScrollCaseWindow.#onRescan
     }
   };
 
@@ -265,8 +265,8 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /** Open the window, or bring it forward; `key` picks a card, `opts` opens its Show options. */
   static open({ key = null, opts = false } = {}) {
-    HandoutsWindow.current ??= new HandoutsWindow();
-    const app = HandoutsWindow.current;
+    ScrollCaseWindow.current ??= new ScrollCaseWindow();
+    const app = ScrollCaseWindow.current;
     if (key) app.select(key, { opts });
     if (app.rendered) {
       app.bringToFront();
@@ -274,7 +274,7 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       return app;
     }
     app.render({ force: true }).catch(err => {
-      log.error("the Handouts window failed to open; Foundry's journal opens instead", err);
+      log.error("the Scroll Case window failed to open; Foundry's journal opens instead", err);
       openClassicJournal();
     });
     return app;
@@ -284,9 +284,9 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /** Redraw when open, once per burst of changes (a journal edited, a player connecting). */
   static refresh() {
-    clearTimeout(HandoutsWindow.#timer);
-    HandoutsWindow.#timer = setTimeout(() => {
-      const app = HandoutsWindow.current;
+    clearTimeout(ScrollCaseWindow.#timer);
+    ScrollCaseWindow.#timer = setTimeout(() => {
+      const app = ScrollCaseWindow.current;
       if (app?.rendered && !app.minimized) app.render();
     }, 250);
   }
@@ -790,14 +790,14 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     for (const card of root.querySelectorAll(".hdt-card[data-key]")) {
       card.addEventListener("dragstart", ev => {
         const d = card.dataset;
-        HandoutsWindow.#dragging = { key: d.key, entry: d.entry || null, category: d.category || null, loose: d.loose === "1" };
+        ScrollCaseWindow.#dragging = { key: d.key, entry: d.entry || null, category: d.category || null, loose: d.loose === "1" };
         card.classList.add("dragging");
         ev.dataTransfer.effectAllowed = "copyMove";
         // A page drags as Foundry's own page drag (a drop on the canvas makes a map note).
         ev.dataTransfer.setData("text/plain", d.loose === "1" ? d.key : JSON.stringify({ type: "JournalEntryPage", uuid: d.key }));
       });
       card.addEventListener("dragend", () => {
-        HandoutsWindow.#dragging = null;
+        ScrollCaseWindow.#dragging = null;
         card.classList.remove("dragging");
         for (const el of root.querySelectorAll(".drop-ok")) el.classList.remove("drop-ok");
       });
@@ -812,7 +812,7 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       });
       row.addEventListener("dragleave", () => row.classList.remove("drop-ok"));
       row.addEventListener("drop", ev => {
-        const d = HandoutsWindow.#dragging;
+        const d = ScrollCaseWindow.#dragging;
         if (!d || !this.#accepts(row.dataset)) return;
         ev.preventDefault();
         ev.stopPropagation();
@@ -824,7 +824,7 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
 
   /** Whether the card being dragged can land on this row: pins take anything, a section only its own journal's pages. */
   #accepts(where) {
-    const d = HandoutsWindow.#dragging;
+    const d = ScrollCaseWindow.#dragging;
     if (!d) return false;
     if (where.drop === "pinned") return true;
     if (d.loose || d.entry !== where.entry) return false;
@@ -883,7 +883,7 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   async #show(key, { to = null, keep = setting("showKeeps"), title = true, caption = true, picture = false } = {}) {
     if (this.#busy.has(key)) return;
     this.#busy.add(key);
-    const { page, file } = HandoutsWindow.#resolve(key);
+    const { page, file } = ScrollCaseWindow.#resolve(key);
     const name = page?.name ?? prettyName(file);
     const online = new Set(show.onlinePlayers().map(u => u.id));
     try {
@@ -955,7 +955,7 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
     }
     // The DM: a click picks; a second click, a double click, or Enter on the picked card opens it to look at.
     if (this.#selected === key && (event.detail >= 2 || event.detail === 0)) {
-      const { page, file } = HandoutsWindow.#resolve(key);
+      const { page, file } = ScrollCaseWindow.#resolve(key);
       if (page) show.openForReading(page);
       else show.openPicture(file);
       return;
@@ -1037,7 +1037,7 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static #onOpenJournal() {
-    const { page, file } = HandoutsWindow.#resolve(this.#selected);
+    const { page, file } = ScrollCaseWindow.#resolve(this.#selected);
     if (page) show.openInJournal(page);
     else if (file) show.openPicture(file);
   }

@@ -7,7 +7,7 @@
  */
 
 import { MODULE_ID } from "./common.js";
-import { remember } from "./decide/handouts.js";
+import { remember } from "./decide/scrollcase.js";
 
 const MAX_SEEN = 3000;
 

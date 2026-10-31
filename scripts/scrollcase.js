@@ -1,26 +1,26 @@
 /**
- * Open Roll 5e: Handouts — the entry point (module.json's `esmodules`).
+ * Open Roll 5e: Scroll Case — the entry point (module.json's `esmodules`).
  *
- * A skin over Foundry's journal: the sidebar's own Journal button opens the Handouts window (the
+ * A skin over Foundry's journal: the sidebar's own Journal button opens the Scroll Case window (the
  * journal as cards, a search, one-click Show) instead of the Journal tab. Classic Mode, a button in
  * the window, puts the stock Journal back for this client; the stock directory then carries a
- * Handouts button to come back. The module keeps no data of its own in the world: every write is
+ * Scroll Case button to come back. The module keeps no data of its own in the world: every write is
  * one the stock journal makes (show.js), and what only it needs lives in the browser (memory.js).
  * Nothing is patched: the Journal button is intercepted with a listener on the button itself. The
- * plan is the suite's docs/plans/handouts.md.
+ * plan is the suite's docs/plans/scrollcase.md.
  */
 
 import { log, MODULE_ID, setting, t } from "./common.js";
-import { kindOf } from "./decide/handouts.js";
+import { kindOf } from "./decide/scrollcase.js";
 import { Finder } from "./finder.js";
-import { HandoutsWindow, openClassicJournal } from "./library.js";
+import { ScrollCaseWindow, openClassicJournal } from "./library.js";
 import * as memory from "./memory.js";
 import { Reader } from "./reader.js";
 import * as show from "./show.js";
 
 export { MODULE_ID, log, t, setting };
 
-const DIRECTORY_BUTTON = "handouts-directory-button";
+const DIRECTORY_BUTTON = "scrollcase-directory-button";
 
 /** The module's window replaces the Journal tab here: enabled for the world, not Classic on this client. */
 const takesOver = () => setting("enabled") && !setting("classic");
@@ -69,7 +69,7 @@ Hooks.once("init", () => {
 });
 
 /* -------------------------------------------------- */
-/*  The sidebar's Journal button opens Handouts       */
+/*  The sidebar's Journal button opens Scroll Case       */
 /* -------------------------------------------------- */
 
 /**
@@ -82,8 +82,8 @@ Hooks.on("renderSidebar", app => {
   try {
     if (!setting("enabled")) return;
     const button = app.element?.querySelector('#sidebar-tabs [data-tab="journal"], nav.tabs [data-tab="journal"]');
-    if (!button || button.dataset.handouts) return;
-    button.dataset.handouts = "1";
+    if (!button || button.dataset.scrollcase) return;
+    button.dataset.scrollcase = "1";
     // The sidebar acts on `click` and on a middle button's `auxclick` alike; a right-click is its popout.
     const open = ev => {
       if (!takesOver() || (ev.type === "click" ? ev.button !== 0 : ev.button !== 1)) return;
@@ -91,9 +91,9 @@ Hooks.on("renderSidebar", app => {
       ev.stopPropagation();
       // Fail open: whatever goes wrong in the window, the stock journal still opens.
       try {
-        HandoutsWindow.open();
+        ScrollCaseWindow.open();
       } catch (err) {
-        log.error("the Handouts window failed to open; Foundry's journal opens instead", err);
+        log.error("the Scroll Case window failed to open; Foundry's journal opens instead", err);
         openClassicJournal();
       }
     };
@@ -105,7 +105,7 @@ Hooks.on("renderSidebar", app => {
 });
 
 /**
- * In Classic Mode, the stock Journal directory carries one button back to Handouts. It switches
+ * In Classic Mode, the stock Journal directory carries one button back to Scroll Case. It switches
  * Classic Mode off for this client and opens the window.
  */
 Hooks.on("renderJournalDirectory", (app, html) => {
@@ -119,17 +119,17 @@ Hooks.on("renderJournalDirectory", (app, html) => {
     const button = document.createElement("button");
     button.type = "button";
     button.id = DIRECTORY_BUTTON;
-    button.className = "handouts-directory-button";
+    button.className = "scrollcase-directory-button";
     button.innerHTML = `<i class="fa-solid fa-images" inert></i> <span>${t("classic.back")}</span>`;
     button.addEventListener("click", async ev => {
       ev.preventDefault();
       ev.stopPropagation();
       await game.settings.set(MODULE_ID, "classic", false);
-      HandoutsWindow.open();
+      ScrollCaseWindow.open();
     });
     actions.append(button);
   } catch (err) {
-    log.error("adding the Handouts button to the journal directory failed", err);
+    log.error("adding the Scroll Case button to the journal directory failed", err);
   }
 });
 
@@ -137,7 +137,7 @@ Hooks.on("renderJournalDirectory", (app, html) => {
 /*  The window follows the journal                    */
 /* -------------------------------------------------- */
 
-const refresh = () => HandoutsWindow.refresh();
+const refresh = () => ScrollCaseWindow.refresh();
 for (const doc of ["JournalEntry", "JournalEntryPage", "JournalEntryCategory"]) {
   for (const verb of ["create", "update", "delete"]) Hooks.on(`${verb}${doc}`, refresh);
 }
@@ -164,7 +164,7 @@ Hooks.on("deleteUser", refresh);
 /* -------------------------------------------------- */
 
 /**
- * A Show sent from Handouts, on a client it is for: the page (or the picture) in the Reader, the GM
+ * A Show sent from Scroll Case, on a client it is for: the page (or the picture) in the Reader, the GM
  * having shown it so it stays open even without the page's permission. In Classic Mode, or for a
  * PDF the Reader cannot show, it opens as Foundry's own Show would. A player's client records it
  * as shown and seen.
@@ -196,7 +196,7 @@ function receiveShow(message, heard) {
 Hooks.once("ready", () => {
   if (!setting("enabled")) return;
 
-  // What is shown to this player, recorded as shown and seen: a Show from Handouts (below), and
+  // What is shown to this player, recorded as shown and seen: a Show from Scroll Case (below), and
   // Foundry's own show events (a GM in Classic Mode), which Foundry opens itself.
   try {
     const heard = uuid => {
@@ -214,7 +214,7 @@ Hooks.once("ready", () => {
       game.socket.on("showEntry", uuid => heard(uuid));
       game.socket.on("shareImage", data => heard(data?.uuid));
     }
-    // A Show from Handouts: the Reader on this screen (Foundry's own view in Classic Mode).
+    // A Show from Scroll Case: the Reader on this screen (Foundry's own view in Classic Mode).
     game.socket.on(show.CHANNEL, message => {
       try {
         receiveShow(message, heard);
@@ -229,14 +229,14 @@ Hooks.once("ready", () => {
   // Foundry v14 bundles module CSS: if a rule of ours does not reach an element, load the sheet.
   try {
     const probe = document.createElement("div");
-    probe.className = "handouts-css-probe";
+    probe.className = "scrollcase-css-probe";
     document.body.append(probe);
     const applied = getComputedStyle(probe).flexDirection === "column";
     probe.remove();
     if (!applied && !document.querySelector(`link[data-${MODULE_ID}-fallback]`)) {
       const link = document.createElement("link");
       link.rel = "stylesheet";
-      link.href = `modules/${MODULE_ID}/styles/handouts.css`;
+      link.href = `modules/${MODULE_ID}/styles/scrollcase.css`;
       link.setAttribute(`data-${MODULE_ID}-fallback`, "true");
       document.head.append(link);
       log.warn("the manifest stylesheet is not in the cascade; loading it directly.");
@@ -248,12 +248,12 @@ Hooks.once("ready", () => {
   const module = game.modules.get(MODULE_ID);
   if (module) {
     module.api = {
-      open: options => HandoutsWindow.open(options),
+      open: options => ScrollCaseWindow.open(options),
       finder: () => Finder.toggle(),
       classic: async (on = true) => {
         await game.settings.set(MODULE_ID, "classic", !!on);
         if (on) openClassicJournal();
-        else HandoutsWindow.open();
+        else ScrollCaseWindow.open();
       },
       memory,
       show

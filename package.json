@@ -1,8 +1,8 @@
 {
-  "name": "fvtt-mod-handouts",
+  "name": "fvtt-mod-scrollcase",
   "private": true,
   "type": "module",
-  "description": "Development tooling for Handouts. NOTHING HERE SHIPS: the module is plain ES modules loaded straight from scripts/, with no build step. This file declares the gate (Biome and the unit tests).",
+  "description": "Development tooling for Scroll Case. NOTHING HERE SHIPS: the module is plain ES modules loaded straight from scripts/, with no build step. This file declares the gate (Biome and the unit tests).",
   "scripts": {
     "verify": "npm run check && npm run test",
     "check": "biome check --error-on-warnings .",
@@ -21,6 +21,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Txpple/fvtt-mod-handouts.git"
+    "url": "https://github.com/Txpple/fvtt-mod-scrollcase.git"
   }
 }

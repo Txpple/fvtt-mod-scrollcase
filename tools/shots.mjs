@@ -32,7 +32,7 @@ const errors = [];
 const watch = (f, label) => {
   f.page?.on("pageerror", err => errors.push(`[${label}] ${err?.message ?? err}`));
   f.page?.on("console", msg => {
-    if (msg.type() === "error" && /handouts/i.test(msg.text())) errors.push(`[${label}] ${msg.text()}`);
+    if (msg.type() === "error" && /scroll ?case/i.test(msg.text())) errors.push(`[${label}] ${msg.text()}`);
   });
 };
 
@@ -68,7 +68,7 @@ const AUDIT = async () => {
     for (const [re, what] of bad) if (re.test(text ?? "")) out.push({ where, what, text: String(text).slice(0, 140) });
     if (!String(text ?? "").length) out.push({ where, what: "empty", text: "" });
   };
-  const w = foundry.applications.instances.get("handouts-library");
+  const w = foundry.applications.instances.get("scrollcase-library");
   for (const card of w.element.querySelectorAll(".hdt-card")) {
     const name = card.querySelector(".hdt-nm span")?.textContent ?? "";
     check(`card name ${card.dataset.key}`, name);
@@ -88,7 +88,7 @@ const AUDIT = async () => {
 const audit = {};
 try {
   await f.evaluate(async ({ scratch }) => {
-    await game.settings.set("fvtt-mod-handouts", "classic", false);
+    await game.settings.set("fvtt-mod-scrollcase", "classic", false);
     for (const app of [...foundry.applications.instances.values()]) if (app.id?.startsWith("handouts")) await app.close();
     for (const j of game.journal.filter(j => j.name === scratch)) await j.delete();
     const img = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.type === "image" && p.src)?.src;
@@ -106,25 +106,25 @@ try {
     document.querySelector('#sidebar-tabs [data-tab="journal"]')?.click();
     for (let i = 0; i < 80; i++) {
       await new Promise(r => setTimeout(r, 100));
-      const el = foundry.applications.instances.get("handouts-library")?.element;
+      const el = foundry.applications.instances.get("scrollcase-library")?.element;
       if (el && !el.querySelector(".hdt-loading")) break;
     }
-    foundry.applications.instances.get("handouts-library").element.querySelector('.hdt-row[data-view="all"]')?.click();
+    foundry.applications.instances.get("scrollcase-library").element.querySelector('.hdt-row[data-view="all"]')?.click();
   });
   audit.all = await f.evaluate(AUDIT);
   await shot(f.page, "02-gm-detail-image", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     const page = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === "Map of Halruaa");
     w.select(page.uuid);
     await w.render();
   });
-  await f.page.hover("#handouts-library .hdt-card:nth-child(2)").catch(() => {});
+  await f.page.hover("#scrollcase-library .hdt-card:nth-child(2)").catch(() => {});
   await shot(f.page, "03-gm-hover");
   await shot(f.page, "04-gm-opts-image", async () => {
-    foundry.applications.instances.get("handouts-library").element.querySelector('.hdt-detail [data-action="openOpts"]')?.click();
+    foundry.applications.instances.get("scrollcase-library").element.querySelector('.hdt-detail [data-action="openOpts"]')?.click();
   });
   await shot(f.page, "05-gm-opts-text-picture", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     w.element.querySelector('.hdt-opts [data-action="optCancel"]')?.click();
     await new Promise(r => setTimeout(r, 300));
     const page = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === "Grimlock");
@@ -134,7 +134,7 @@ try {
     w.element.querySelector('.hdt-opts [data-action="optPicture"]')?.click();
   });
   await shot(f.page, "06-gm-search-maze", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     w.element.querySelector('.hdt-opts [data-action="optCancel"]')?.click();
     await new Promise(r => setTimeout(r, 300));
     const input = w.element.querySelector("input[name=search]");
@@ -142,12 +142,12 @@ try {
     input.dispatchEvent(new Event("input", { bubbles: true }));
   });
   await shot(f.page, "07-gm-search-files", async () => {
-    const input = foundry.applications.instances.get("handouts-library").element.querySelector("input[name=search]");
+    const input = foundry.applications.instances.get("scrollcase-library").element.querySelector("input[name=search]");
     input.value = "hearth home";
     input.dispatchEvent(new Event("input", { bubbles: true }));
   });
   await shot(f.page, "08-gm-search-more", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     const id = game.journal.getName("Bestiary")?.id;
     w.element.querySelector(`.hdt-row[data-view="j:${id}"]`)?.click();
     await new Promise(r => setTimeout(r, 400));
@@ -156,7 +156,7 @@ try {
     input.dispatchEvent(new Event("input", { bubbles: true }));
   });
   await shot(f.page, "09-gm-loose", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     const input = w.element.querySelector("input[name=search]");
     input.value = "";
     input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -164,20 +164,20 @@ try {
   });
   audit.loose = await f.evaluate(AUDIT);
   await shot(f.page, "10-gm-bestiary-small", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     const id = game.journal.getName("Bestiary")?.id;
     w.element.querySelector(`.hdt-row[data-view="j:${id}"]`)?.click();
     await new Promise(r => setTimeout(r, 300));
     w.element.querySelector('[data-action="size"][data-size="s"]')?.click();
   });
   await shot(f.page, "11-gm-gmonly-large", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     w.element.querySelector('[data-action="size"][data-size="l"]')?.click();
     await new Promise(r => setTimeout(r, 300));
     w.element.querySelector('.hdt-row[data-view="gm"]')?.click();
   });
   await shot(f.page, "12-gm-text-detail", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     w.element.querySelector('[data-action="size"][data-size="m"]')?.click();
     await new Promise(r => setTimeout(r, 300));
     const page = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === "ZZ-HDT Letter");
@@ -186,7 +186,7 @@ try {
   });
   audit.gmOnly = await f.evaluate(AUDIT);
   await shot(f.page, "13-gm-reveal-strip", async () => {
-    const w = foundry.applications.instances.get("handouts-library");
+    const w = foundry.applications.instances.get("scrollcase-library");
     const page = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name.startsWith("ZZ-HDT A Handout"));
     w.select(page.uuid);
     await w.render();
@@ -195,10 +195,10 @@ try {
     for (let i = 0; i < 30 && !w.element.querySelector(".hdt-reveal"); i++) await new Promise(r => setTimeout(r, 100));
   });
   await shot(f.page, "14-finder-empty", async () => {
-    await game.modules.get("fvtt-mod-handouts").api.finder();
+    await game.modules.get("fvtt-mod-scrollcase").api.finder();
   });
   await shot(f.page, "15-finder-query", async () => {
-    const app = foundry.applications.instances.get("handouts-finder");
+    const app = foundry.applications.instances.get("scrollcase-finder");
     const input = app.element.querySelector("input[name=find]");
     input.value = "grim";
     input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -206,23 +206,23 @@ try {
     input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
   });
   await shot(f.page, "16-finder-files", async () => {
-    const app = foundry.applications.instances.get("handouts-finder");
+    const app = foundry.applications.instances.get("scrollcase-finder");
     const input = app.element.querySelector("input[name=find]");
     input.value = "breach";
     input.dispatchEvent(new Event("input", { bubbles: true }));
   });
   audit.finder = await f.evaluate(() => {
-    const app = foundry.applications.instances.get("handouts-finder");
+    const app = foundry.applications.instances.get("scrollcase-finder");
     const rows = [...app.element.querySelectorAll(".hdt-res")].map(r => r.textContent.replace(/\s+/g, " ").trim());
     return { rows, problems: rows.filter(r => /undefined|null|NaN|&[a-z]+;|@\w+\[|<\//.test(r)) };
   });
   await shot(f.page, "17-classic-directory", async () => {
-    await foundry.applications.instances.get("handouts-finder")?.close();
-    foundry.applications.instances.get("handouts-library").element.querySelector('[data-action="classic"]')?.click();
+    await foundry.applications.instances.get("scrollcase-finder")?.close();
+    foundry.applications.instances.get("scrollcase-library").element.querySelector('[data-action="classic"]')?.click();
   });
   await f.evaluate(async () => {
-    await game.settings.set("fvtt-mod-handouts", "classic", false);
-    await foundry.applications.instances.get("handouts-library")?.close();
+    await game.settings.set("fvtt-mod-scrollcase", "classic", false);
+    await foundry.applications.instances.get("scrollcase-library")?.close();
   });
   for (const [name, w, h] of [
     ["18-gm-narrow-760", 760, 640],
@@ -232,7 +232,7 @@ try {
       f.page,
       name,
       async ({ w, h }) => {
-        const app = game.modules.get("fvtt-mod-handouts").api.open();
+        const app = game.modules.get("fvtt-mod-scrollcase").api.open();
         for (let i = 0; i < 30 && !app.rendered; i++) await new Promise(r => setTimeout(r, 100));
         app.setPosition({ width: w, height: h });
       },
@@ -240,7 +240,7 @@ try {
     );
   }
   await f.evaluate(async () => {
-    const app = foundry.applications.instances.get("handouts-library");
+    const app = foundry.applications.instances.get("scrollcase-library");
     app?.setPosition({ width: 1180, height: 800 });
     await app?.close();
   });
@@ -256,12 +256,12 @@ try {
   await fp.page.setViewportSize({ width, height });
   await fp.evaluate(async () => {
     document.querySelector('#sidebar-tabs [data-tab="journal"]')?.click();
-    for (let i = 0; i < 40 && !foundry.applications.instances.get("handouts-library")?.rendered; i++) await new Promise(r => setTimeout(r, 100));
+    for (let i = 0; i < 40 && !foundry.applications.instances.get("scrollcase-library")?.rendered; i++) await new Promise(r => setTimeout(r, 100));
   });
   await f.evaluate(
     async ({ userId }) => {
       const pages = game.journal.contents.flatMap(j => j.pages.contents);
-      const api = game.modules.get("fvtt-mod-handouts").api;
+      const api = game.modules.get("fvtt-mod-scrollcase").api;
       await api.show.setVisible(pages.find(p => p.name === "ZZ-HDT Letter"), [userId]);
       await api.show.showPage(pages.find(p => p.name === "Map of Halruaa"), { to: [userId], keep: false });
     },
@@ -271,34 +271,34 @@ try {
   await shot(fp.page, "20-player-shown-popout");
   await shot(fp.page, "21-player-recent", async () => {
     for (const app of [...foundry.applications.instances.values()]) if (app.constructor.name === "ImagePopout") await app.close();
-    foundry.applications.instances.get("handouts-library")?.element.querySelector('.hdt-row[data-view="recent"]')?.click();
+    foundry.applications.instances.get("scrollcase-library")?.element.querySelector('.hdt-row[data-view="recent"]')?.click();
   });
   await shot(fp.page, "22-player-new", async () => {
-    foundry.applications.instances.get("handouts-library")?.element.querySelector('.hdt-row[data-view="unseen"]')?.click();
+    foundry.applications.instances.get("scrollcase-library")?.element.querySelector('.hdt-row[data-view="unseen"]')?.click();
   });
   await shot(fp.page, "23-player-all", async () => {
-    foundry.applications.instances.get("handouts-library")?.element.querySelector('.hdt-row[data-view="all"]')?.click();
+    foundry.applications.instances.get("scrollcase-library")?.element.querySelector('.hdt-row[data-view="all"]')?.click();
   });
   audit.player = await fp.evaluate(AUDIT);
   const openReader = async name => {
     const page = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === name);
-    foundry.applications.instances.get("handouts-library")?.element.querySelector(`.hdt-card[data-key="${page.uuid}"] [data-action="pick"]`)?.click();
-    for (let i = 0; i < 40 && !foundry.applications.instances.get(`handouts-reader-${page.id}`)?.rendered; i++) await new Promise(r => setTimeout(r, 100));
+    foundry.applications.instances.get("scrollcase-library")?.element.querySelector(`.hdt-card[data-key="${page.uuid}"] [data-action="pick"]`)?.click();
+    for (let i = 0; i < 40 && !foundry.applications.instances.get(`scrollcase-reader-${page.id}`)?.rendered; i++) await new Promise(r => setTimeout(r, 100));
   };
   await shot(fp.page, "25-player-reader-text", openReader, "Darkmantle");
   await shot(fp.page, "26-player-reader-image", async name => {
-    for (const app of [...foundry.applications.instances.values()]) if (app.id?.startsWith("handouts-reader-")) await app.close();
+    for (const app of [...foundry.applications.instances.values()]) if (app.id?.startsWith("scrollcase-reader-")) await app.close();
     const page = game.journal.contents.flatMap(j => j.pages.contents).find(p => p.name === name);
-    foundry.applications.instances.get("handouts-library")?.element.querySelector(`.hdt-card[data-key="${page.uuid}"] [data-action="pick"]`)?.click();
-    for (let i = 0; i < 40 && !foundry.applications.instances.get(`handouts-reader-${page.id}`)?.rendered; i++) await new Promise(r => setTimeout(r, 100));
+    foundry.applications.instances.get("scrollcase-library")?.element.querySelector(`.hdt-card[data-key="${page.uuid}"] [data-action="pick"]`)?.click();
+    for (let i = 0; i < 40 && !foundry.applications.instances.get(`scrollcase-reader-${page.id}`)?.rendered; i++) await new Promise(r => setTimeout(r, 100));
   }, "The Elders at the Fire");
   await fp.evaluate(async () => {
-    for (const app of [...foundry.applications.instances.values()]) if (app.id?.startsWith("handouts-reader-")) await app.close();
+    for (const app of [...foundry.applications.instances.values()]) if (app.id?.startsWith("scrollcase-reader-")) await app.close();
   });
   await shot(fp.page, "24-player-finder", async () => {
-    await game.modules.get("fvtt-mod-handouts").api.finder();
+    await game.modules.get("fvtt-mod-scrollcase").api.finder();
     await new Promise(r => setTimeout(r, 300));
-    const input = foundry.applications.instances.get("handouts-finder").element.querySelector("input[name=find]");
+    const input = foundry.applications.instances.get("scrollcase-finder").element.querySelector("input[name=find]");
     input.value = "letter";
     input.dispatchEvent(new Event("input", { bubbles: true }));
   });
@@ -310,7 +310,7 @@ try {
   await f
     .evaluate(
       async ({ name, scratch }) => {
-        await game.modules.get("fvtt-mod-handouts").api.show.forgetReveal?.();
+        await game.modules.get("fvtt-mod-scrollcase").api.show.forgetReveal?.();
         for (const u of game.users.filter(u => u.name === name)) await u.delete();
         for (const j of game.journal.filter(j => j.name === scratch)) await j.delete();
         for (const app of [...foundry.applications.instances.values()]) if (app.id?.startsWith("handouts")) await app.close();

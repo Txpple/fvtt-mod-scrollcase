@@ -1,18 +1,18 @@
 /*
- * Handouts: the library window, the finder, the directory's way back. Scoped to the module's own
+ * Scroll Case: the library window, the finder, the directory's way back. Scoped to the module's own
  * classes; nothing here reaches a stock sheet, the directory or the sidebar.
  */
 
 /* The `ready` hook appends one of these and reads its flex-direction: the honest question of
    whether this sheet reached the cascade (v14 bundles module CSS). */
-.handouts-css-probe {
+.scrollcase-css-probe {
   display: none;
   flex-direction: column;
 }
 
-.handouts-library,
-.handouts-finder,
-.handouts-reader {
+.scrollcase-library,
+.scrollcase-finder,
+.scrollcase-reader {
   --hdt-ground: #1e1b18;
   --hdt-panel: #26221e;
   --hdt-card: #2b2723;
@@ -27,9 +27,9 @@
   --hdt-blue: #9cc7e8;
 }
 
-.handouts-library .window-content,
-.handouts-finder .window-content,
-.handouts-reader .window-content {
+.scrollcase-library .window-content,
+.scrollcase-finder .window-content,
+.scrollcase-reader .window-content {
   padding: 0;
   background: var(--hdt-ground);
   color: var(--hdt-ink);
@@ -37,7 +37,7 @@
 }
 
 .hdt-root {
-  container: handouts / inline-size;
+  container: scrollcase / inline-size;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -857,7 +857,7 @@
   font-size: var(--font-size-16, 1rem);
 }
 
-.handouts-finder kbd {
+.scrollcase-finder kbd {
   display: inline-block;
   padding: 0 0.3rem;
   border: 1px solid #5a5446;
@@ -981,7 +981,7 @@
 /*  Classic Mode's way back, in the stock directory    */
 /* -------------------------------------------------- */
 
-.handouts-directory-button {
+.scrollcase-directory-button {
   flex: 1 1 100%;
 }
 
@@ -990,7 +990,7 @@
 /*  then the detail gone (a double click still opens)   */
 /* -------------------------------------------------- */
 
-@container handouts (max-width: 980px) {
+@container scrollcase (max-width: 980px) {
   .hdt-rail {
     flex-basis: 11.5rem;
   }
@@ -999,7 +999,7 @@
   }
 }
 
-@container handouts (max-width: 880px) {
+@container scrollcase (max-width: 880px) {
   .hdt-classic-text {
     display: none;
   }

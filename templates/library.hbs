@@ -3,40 +3,40 @@
     <label class="hdt-search">
       <i class="fa-solid fa-magnifying-glass" inert></i>
       <input type="search" name="search" value="{{query}}" autocomplete="off"
-        placeholder="{{localize 'fvtt-mod-handouts.search.placeholder'}}"
-        aria-label="{{localize 'fvtt-mod-handouts.search.label'}}">
+        placeholder="{{localize 'fvtt-mod-scrollcase.search.placeholder'}}"
+        aria-label="{{localize 'fvtt-mod-scrollcase.search.label'}}">
     </label>
-    <div class="hdt-pills" role="group" aria-label="{{localize 'fvtt-mod-handouts.type.label'}}">
+    <div class="hdt-pills" role="group" aria-label="{{localize 'fvtt-mod-scrollcase.type.label'}}">
       {{#each types}}
       <button type="button" class="hdt-pill {{#if on}}on{{/if}}" data-action="type" data-type="{{id}}" aria-pressed="{{#if on}}true{{else}}false{{/if}}">{{label}} <small>{{n}}</small></button>
       {{/each}}
     </div>
-    <div class="hdt-pills" role="group" aria-label="{{localize 'fvtt-mod-handouts.size.label'}}">
+    <div class="hdt-pills" role="group" aria-label="{{localize 'fvtt-mod-scrollcase.size.label'}}">
       {{#each sizes}}
       <button type="button" class="hdt-pill {{#if on}}on{{/if}}" data-action="size" data-size="{{id}}" aria-label="{{aria}}" aria-pressed="{{#if on}}true{{else}}false{{/if}}">{{label}}</button>
       {{/each}}
     </div>
-    <button type="button" class="hdt-classic" data-action="classic" data-tooltip="{{localize 'fvtt-mod-handouts.classic.hint'}}">
-      <i class="fa-solid fa-book-open" inert></i> <span class="hdt-classic-text">{{localize "fvtt-mod-handouts.classic.button"}}</span>
+    <button type="button" class="hdt-classic" data-action="classic" data-tooltip="{{localize 'fvtt-mod-scrollcase.classic.hint'}}">
+      <i class="fa-solid fa-book-open" inert></i> <span class="hdt-classic-text">{{localize "fvtt-mod-scrollcase.classic.button"}}</span>
     </button>
   </div>
 
   <div class="hdt-body">
-    <nav class="hdt-rail" aria-label="{{localize 'fvtt-mod-handouts.rail.label'}}">
-      <div class="hdt-key">{{localize "fvtt-mod-handouts.rail.handouts"}}</div>
+    <nav class="hdt-rail" aria-label="{{localize 'fvtt-mod-scrollcase.rail.label'}}">
+      <div class="hdt-key">{{localize "fvtt-mod-scrollcase.rail.handouts"}}</div>
       {{#each views}}
       <button type="button" class="hdt-row {{#if on}}on{{/if}}" data-action="view" data-view="{{id}}" {{#if drop}}data-drop="{{drop}}"{{/if}} aria-current="{{#if on}}true{{else}}false{{/if}}">
         <span class="n">{{label}}</span><small>{{n}}</small>
       </button>
       {{/each}}
       {{#if folders.length}}
-      <div class="hdt-key">{{localize "fvtt-mod-handouts.rail.journals"}}</div>
+      <div class="hdt-key">{{localize "fvtt-mod-scrollcase.rail.journals"}}</div>
       {{/if}}
       {{#each folders}}
       {{#if name}}<div class="hdt-folder"><i class="fa-solid fa-folder" inert></i> <span>{{name}}</span></div>{{/if}}
       {{#each journals}}
       <button type="button" class="hdt-row hdt-journal {{#if on}}on{{/if}}" data-action="view" data-view="j:{{id}}" data-drop="journal" data-entry="{{id}}" aria-current="{{#if on}}true{{else}}false{{/if}}">
-        <span class="n">{{name}}</span>{{#if nNew}}<span class="hdt-newcount" data-tooltip="{{localize 'fvtt-mod-handouts.badge.new'}}">{{nNew}}</span>{{/if}}<small>{{n}}</small>
+        <span class="n">{{name}}</span>{{#if nNew}}<span class="hdt-newcount" data-tooltip="{{localize 'fvtt-mod-scrollcase.badge.new'}}">{{nNew}}</span>{{/if}}<small>{{n}}</small>
       </button>
       {{#each cats}}
       <button type="button" class="hdt-row hdt-cat {{#if on}}on{{/if}}" data-action="view" data-view="c:{{../id}}.{{id}}" data-drop="cat" data-entry="{{../id}}" data-cat="{{id}}" aria-current="{{#if on}}true{{else}}false{{/if}}">
@@ -51,16 +51,16 @@
       <div class="hdt-head">
         <h2>{{heading}}</h2>
         <span class="hdt-count" data-base="{{countBase}}" aria-live="polite"></span>
-        {{#if loading}}<span class="hdt-loading"><i class="fa-solid fa-spinner fa-spin" inert></i> {{localize "fvtt-mod-handouts.files.loading"}}</span>{{/if}}
-        {{#if markAll}}<button type="button" class="hdt-btn hdt-markall" data-action="markSeen"><i class="fa-solid fa-check-double" inert></i> {{localize "fvtt-mod-handouts.badge.markAll"}}</button>{{/if}}
-        {{#if isGM}}<button type="button" class="hdt-rescan" data-action="rescan" data-tooltip="{{localize 'fvtt-mod-handouts.files.rescan'}}" aria-label="{{localize 'fvtt-mod-handouts.files.rescan'}}"><i class="fa-solid fa-arrows-rotate" inert></i></button>{{/if}}
+        {{#if loading}}<span class="hdt-loading"><i class="fa-solid fa-spinner fa-spin" inert></i> {{localize "fvtt-mod-scrollcase.files.loading"}}</span>{{/if}}
+        {{#if markAll}}<button type="button" class="hdt-btn hdt-markall" data-action="markSeen"><i class="fa-solid fa-check-double" inert></i> {{localize "fvtt-mod-scrollcase.badge.markAll"}}</button>{{/if}}
+        {{#if isGM}}<button type="button" class="hdt-rescan" data-action="rescan" data-tooltip="{{localize 'fvtt-mod-scrollcase.files.rescan'}}" aria-label="{{localize 'fvtt-mod-scrollcase.files.rescan'}}"><i class="fa-solid fa-arrows-rotate" inert></i></button>{{/if}}
       </div>
       {{#if reveal}}
       <div class="hdt-reveal" role="status">
         <i class="fa-solid fa-eye" inert></i>
         <span>{{reveal.text}}</span>
-        <button type="button" class="hdt-btn hdt-undo" data-action="undo" data-tooltip="{{localize 'fvtt-mod-handouts.show.undoHint'}}"><i class="fa-solid fa-rotate-left" inert></i> {{localize "fvtt-mod-handouts.show.undo"}}</button>
-        <button type="button" class="hdt-x" data-action="dismissReveal" aria-label="{{localize 'fvtt-mod-handouts.show.dismiss'}}" data-tooltip="{{localize 'fvtt-mod-handouts.show.dismiss'}}"><i class="fa-solid fa-xmark" inert></i></button>
+        <button type="button" class="hdt-btn hdt-undo" data-action="undo" data-tooltip="{{localize 'fvtt-mod-scrollcase.show.undoHint'}}"><i class="fa-solid fa-rotate-left" inert></i> {{localize "fvtt-mod-scrollcase.show.undo"}}</button>
+        <button type="button" class="hdt-x" data-action="dismissReveal" aria-label="{{localize 'fvtt-mod-scrollcase.show.dismiss'}}" data-tooltip="{{localize 'fvtt-mod-scrollcase.show.dismiss'}}"><i class="fa-solid fa-xmark" inert></i></button>
       </div>
       {{/if}}
       <div class="hdt-cards hdt-size-{{size}}">
@@ -72,7 +72,7 @@
               {{#if picture}}<img src="{{picture}}" alt="" loading="lazy" draggable="false">
               {{else}}<span class="hdt-excerpt"><i class="fa-solid {{icon}}" inert></i><span>{{excerpt}}</span></span>{{/if}}
               {{#if badge}}<span class="hdt-badge {{badgeCls}}" data-tooltip="{{badge}}"><i class="fa-solid {{badgeIcon}}" inert></i><span class="hdt-badge-text"> {{badge}}</span></span>{{/if}}
-              {{#if unseen}}<span class="hdt-new">{{localize "fvtt-mod-handouts.badge.new"}}</span>{{/if}}
+              {{#if unseen}}<span class="hdt-new">{{localize "fvtt-mod-scrollcase.badge.new"}}</span>{{/if}}
             </span>
             <span class="hdt-cb">
               <span class="hdt-nm">{{#if pinned}}<i class="fa-solid fa-thumbtack" inert></i>{{/if}}<span dir="auto">{{name}}</span></span>
@@ -82,9 +82,9 @@
           {{#if ../isGM}}
           <span class="hdt-acts">
             <button type="button" class="go" data-action="quickShow" data-tooltip="{{showHint}}"><i class="fa-solid fa-paper-plane" inert></i> {{showLabel}}</button>
-            <button type="button" class="more" data-action="openOpts" aria-label="{{localize 'fvtt-mod-handouts.show.options'}}" data-tooltip="{{localize 'fvtt-mod-handouts.show.options'}}"><i class="fa-solid fa-chevron-down" inert></i></button>
+            <button type="button" class="more" data-action="openOpts" aria-label="{{localize 'fvtt-mod-scrollcase.show.options'}}" data-tooltip="{{localize 'fvtt-mod-scrollcase.show.options'}}"><i class="fa-solid fa-chevron-down" inert></i></button>
           </span>
-            <button type="button" class="hdt-pin" data-action="pin" aria-label="{{#if pinned}}{{localize 'fvtt-mod-handouts.pin.unpin'}}{{else}}{{localize 'fvtt-mod-handouts.pin.off'}}{{/if}}" data-tooltip="{{#if pinned}}{{localize 'fvtt-mod-handouts.pin.unpin'}}{{else}}{{localize 'fvtt-mod-handouts.pin.off'}}{{/if}}" aria-pressed="{{#if pinned}}true{{else}}false{{/if}}"><i class="fa-solid fa-thumbtack" inert></i></button>
+            <button type="button" class="hdt-pin" data-action="pin" aria-label="{{#if pinned}}{{localize 'fvtt-mod-scrollcase.pin.unpin'}}{{else}}{{localize 'fvtt-mod-scrollcase.pin.off'}}{{/if}}" data-tooltip="{{#if pinned}}{{localize 'fvtt-mod-scrollcase.pin.unpin'}}{{else}}{{localize 'fvtt-mod-scrollcase.pin.off'}}{{/if}}" aria-pressed="{{#if pinned}}true{{else}}false{{/if}}"><i class="fa-solid fa-thumbtack" inert></i></button>
           {{/if}}
         </article>
         {{/each}}
@@ -105,57 +105,57 @@
       </div>
       <div class="hdt-btns">
         <button type="button" class="hdt-btn pri" data-action="quickShow"><i class="fa-solid fa-paper-plane" inert></i> {{detail.showLabel}}</button>
-        <button type="button" class="hdt-btn" data-action="openOpts" aria-label="{{localize 'fvtt-mod-handouts.show.options'}}" data-tooltip="{{localize 'fvtt-mod-handouts.show.options'}}"><i class="fa-solid fa-chevron-down" inert></i></button>
+        <button type="button" class="hdt-btn" data-action="openOpts" aria-label="{{localize 'fvtt-mod-scrollcase.show.options'}}" data-tooltip="{{localize 'fvtt-mod-scrollcase.show.options'}}"><i class="fa-solid fa-chevron-down" inert></i></button>
         {{#if detail.textPicture}}
-        <button type="button" class="hdt-btn" data-action="showPicture" data-tooltip="{{localize 'fvtt-mod-handouts.show.pictureHint'}}"><i class="fa-solid fa-image" inert></i> {{localize "fvtt-mod-handouts.show.picture"}}</button>
+        <button type="button" class="hdt-btn" data-action="showPicture" data-tooltip="{{localize 'fvtt-mod-scrollcase.show.pictureHint'}}"><i class="fa-solid fa-image" inert></i> {{localize "fvtt-mod-scrollcase.show.picture"}}</button>
         {{/if}}
         {{#if detail.again}}
         <button type="button" class="hdt-btn" data-action="showAgain"><i class="fa-solid fa-repeat" inert></i> {{detail.again}}</button>
         {{/if}}
       </div>
       <div class="hdt-btns">
-        <button type="button" class="hdt-btn {{#if detail.pinned}}on{{/if}}" data-action="pin" aria-pressed="{{#if detail.pinned}}true{{else}}false{{/if}}" data-tooltip="{{localize 'fvtt-mod-handouts.pin.hint'}}"><i class="fa-solid fa-thumbtack" inert></i> {{#if detail.pinned}}{{localize "fvtt-mod-handouts.pin.on"}}{{else}}{{localize "fvtt-mod-handouts.pin.off"}}{{/if}}</button>
+        <button type="button" class="hdt-btn {{#if detail.pinned}}on{{/if}}" data-action="pin" aria-pressed="{{#if detail.pinned}}true{{else}}false{{/if}}" data-tooltip="{{localize 'fvtt-mod-scrollcase.pin.hint'}}"><i class="fa-solid fa-thumbtack" inert></i> {{#if detail.pinned}}{{localize "fvtt-mod-scrollcase.pin.on"}}{{else}}{{localize "fvtt-mod-scrollcase.pin.off"}}{{/if}}</button>
         {{#if detail.loose}}
-        <button type="button" class="hdt-btn" data-action="keep" data-tooltip="{{localize 'fvtt-mod-handouts.keep.hint'}}"><i class="fa-solid fa-plus" inert></i> {{localize "fvtt-mod-handouts.keep.button"}}</button>
-        <button type="button" class="hdt-btn" data-action="openJournal" aria-label="{{localize 'fvtt-mod-handouts.detail.look'}}" data-tooltip="{{localize 'fvtt-mod-handouts.detail.look'}}"><i class="fa-solid fa-expand" inert></i></button>
+        <button type="button" class="hdt-btn" data-action="keep" data-tooltip="{{localize 'fvtt-mod-scrollcase.keep.hint'}}"><i class="fa-solid fa-plus" inert></i> {{localize "fvtt-mod-scrollcase.keep.button"}}</button>
+        <button type="button" class="hdt-btn" data-action="openJournal" aria-label="{{localize 'fvtt-mod-scrollcase.detail.look'}}" data-tooltip="{{localize 'fvtt-mod-scrollcase.detail.look'}}"><i class="fa-solid fa-expand" inert></i></button>
         {{else}}
-        <button type="button" class="hdt-btn" data-action="openJournal"><i class="fa-solid fa-book-open" inert></i> {{localize "fvtt-mod-handouts.detail.openJournal"}}</button>
-        <button type="button" class="hdt-btn" data-action="copyLink" aria-label="{{localize 'fvtt-mod-handouts.detail.copyLink'}}" data-tooltip="{{localize 'fvtt-mod-handouts.detail.copyLink'}}"><i class="fa-solid fa-link" inert></i></button>
+        <button type="button" class="hdt-btn" data-action="openJournal"><i class="fa-solid fa-book-open" inert></i> {{localize "fvtt-mod-scrollcase.detail.openJournal"}}</button>
+        <button type="button" class="hdt-btn" data-action="copyLink" aria-label="{{localize 'fvtt-mod-scrollcase.detail.copyLink'}}" data-tooltip="{{localize 'fvtt-mod-scrollcase.detail.copyLink'}}"><i class="fa-solid fa-link" inert></i></button>
         {{/if}}
       </div>
       <div class="hdt-field">
-        <span class="hdt-key">{{localize "fvtt-mod-handouts.detail.where"}}</span>
+        <span class="hdt-key">{{localize "fvtt-mod-scrollcase.detail.where"}}</span>
         <span>{{detail.where}}</span>
         {{#if detail.file}}<span class="hdt-file">{{detail.file}}</span>{{/if}}
       </div>
       {{#if detail.sections}}
       <label class="hdt-field">
-        <span class="hdt-key">{{localize "fvtt-mod-handouts.detail.section"}}</span>
+        <span class="hdt-key">{{localize "fvtt-mod-scrollcase.detail.section"}}</span>
         <select name="section">
           {{#each detail.sections}}<option value="{{id}}" {{#if on}}selected{{/if}}>{{name}}</option>{{/each}}
         </select>
       </label>
       {{/if}}
       <div class="hdt-field">
-        <span class="hdt-key">{{localize "fvtt-mod-handouts.detail.canSee"}}</span>
+        <span class="hdt-key">{{localize "fvtt-mod-scrollcase.detail.canSee"}}</span>
         {{#if detail.loose}}
-        <span class="hdt-note">{{localize "fvtt-mod-handouts.detail.fileNote"}}</span>
+        <span class="hdt-note">{{localize "fvtt-mod-scrollcase.detail.fileNote"}}</span>
         {{else if detail.noPlayers}}
-        <span class="hdt-note">{{localize "fvtt-mod-handouts.detail.noPlayers"}}</span>
+        <span class="hdt-note">{{localize "fvtt-mod-scrollcase.detail.noPlayers"}}</span>
         {{else}}
-        <div class="hdt-togs" role="group" aria-label="{{localize 'fvtt-mod-handouts.detail.canSee'}}">
-          <button type="button" class="hdt-tog {{#if detail.everyone}}on{{/if}}" data-action="seeAll" aria-pressed="{{#if detail.everyone}}true{{else}}false{{/if}}">{{localize "fvtt-mod-handouts.detail.everyone"}}</button>
+        <div class="hdt-togs" role="group" aria-label="{{localize 'fvtt-mod-scrollcase.detail.canSee'}}">
+          <button type="button" class="hdt-tog {{#if detail.everyone}}on{{/if}}" data-action="seeAll" aria-pressed="{{#if detail.everyone}}true{{else}}false{{/if}}">{{localize "fvtt-mod-scrollcase.detail.everyone"}}</button>
           {{#each detail.players}}
           <button type="button" class="hdt-tog {{#if on}}on{{/if}} {{#if ../detail.everyone}}implied{{/if}}" data-action="seeUser" data-user="{{id}}" aria-pressed="{{#if on}}true{{else}}false{{/if}}" {{#if character}}data-tooltip="{{character}}"{{/if}}>
             <span class="hdt-dot {{#if online}}online{{/if}}" inert></span>{{name}}
           </button>
           {{/each}}
         </div>
-        <span class="hdt-note">{{localize "fvtt-mod-handouts.detail.canSeeNote"}}</span>
+        <span class="hdt-note">{{localize "fvtt-mod-scrollcase.detail.canSeeNote"}}</span>
         {{/if}}
       </div>
       <div class="hdt-field">
-        <span class="hdt-key">{{localize "fvtt-mod-handouts.detail.lastShown"}}</span>
+        <span class="hdt-key">{{localize "fvtt-mod-scrollcase.detail.lastShown"}}</span>
         <span>{{detail.shown}}</span>
       </div>
     </aside>
@@ -164,14 +164,14 @@
 
   {{#if opts}}
   <div class="hdt-veil">
-    <div class="hdt-opts" role="dialog" aria-modal="true" aria-label="{{localize 'fvtt-mod-handouts.show.options'}}">
+    <div class="hdt-opts" role="dialog" aria-modal="true" aria-label="{{localize 'fvtt-mod-scrollcase.show.options'}}">
       <div class="hdt-opts-head">
         {{#if opts.picture}}<img src="{{opts.picture}}" alt="">{{/if}}
-        <div><div class="hdt-key">{{localize "fvtt-mod-handouts.show.button"}}</div><strong>{{opts.name}}</strong></div>
+        <div><div class="hdt-key">{{localize "fvtt-mod-scrollcase.show.button"}}</div><strong>{{opts.name}}</strong></div>
         <button type="button" class="hdt-x" data-action="optCancel" aria-label="{{localize 'Close'}}"><i class="fa-solid fa-xmark" inert></i></button>
       </div>
       <div class="hdt-field">
-        <span class="hdt-key">{{localize "fvtt-mod-handouts.opts.to"}}</span>
+        <span class="hdt-key">{{localize "fvtt-mod-scrollcase.opts.to"}}</span>
         <div class="hdt-togs">
           <button type="button" class="hdt-tog {{#if opts.everyone}}on{{/if}}" data-action="optAll" aria-pressed="{{#if opts.everyone}}true{{else}}false{{/if}}">{{opts.everyoneLabel}}</button>
           {{#each opts.players}}
@@ -185,18 +185,18 @@
       </div>
       {{#if opts.textPicture}}
       <div class="hdt-field">
-        <button type="button" class="hdt-tog hdt-switch {{#if opts.pictureOnly}}on{{/if}}" data-action="optPicture" role="switch" aria-checked="{{#if opts.pictureOnly}}true{{else}}false{{/if}}"><i class="fa-regular {{#if opts.pictureOnly}}fa-square-check{{else}}fa-square{{/if}}" inert></i> {{localize "fvtt-mod-handouts.opts.pictureOnly"}}</button>
+        <button type="button" class="hdt-tog hdt-switch {{#if opts.pictureOnly}}on{{/if}}" data-action="optPicture" role="switch" aria-checked="{{#if opts.pictureOnly}}true{{else}}false{{/if}}"><i class="fa-regular {{#if opts.pictureOnly}}fa-square-check{{else}}fa-square{{/if}}" inert></i> {{localize "fvtt-mod-scrollcase.opts.pictureOnly"}}</button>
       </div>
       {{/if}}
       {{#if opts.isImage}}
       <div class="hdt-togs">
-        <button type="button" class="hdt-tog hdt-switch {{#if opts.title}}on{{/if}}" data-action="optTitle" role="switch" aria-checked="{{#if opts.title}}true{{else}}false{{/if}}"><i class="fa-regular {{#if opts.title}}fa-square-check{{else}}fa-square{{/if}}" inert></i> {{localize "fvtt-mod-handouts.opts.title"}}</button>
-        {{#unless opts.loose}}<button type="button" class="hdt-tog hdt-switch {{#if opts.caption}}on{{/if}}" data-action="optCaption" role="switch" aria-checked="{{#if opts.caption}}true{{else}}false{{/if}}"><i class="fa-regular {{#if opts.caption}}fa-square-check{{else}}fa-square{{/if}}" inert></i> {{localize "fvtt-mod-handouts.opts.caption"}}</button>{{/unless}}
+        <button type="button" class="hdt-tog hdt-switch {{#if opts.title}}on{{/if}}" data-action="optTitle" role="switch" aria-checked="{{#if opts.title}}true{{else}}false{{/if}}"><i class="fa-regular {{#if opts.title}}fa-square-check{{else}}fa-square{{/if}}" inert></i> {{localize "fvtt-mod-scrollcase.opts.title"}}</button>
+        {{#unless opts.loose}}<button type="button" class="hdt-tog hdt-switch {{#if opts.caption}}on{{/if}}" data-action="optCaption" role="switch" aria-checked="{{#if opts.caption}}true{{else}}false{{/if}}"><i class="fa-regular {{#if opts.caption}}fa-square-check{{else}}fa-square{{/if}}" inert></i> {{localize "fvtt-mod-scrollcase.opts.caption"}}</button>{{/unless}}
       </div>
       {{/if}}
       <div class="hdt-opts-foot">
         <button type="button" class="hdt-btn" data-action="optCancel">{{localize "Cancel"}}</button>
-        <button type="button" class="hdt-btn pri" data-action="optGo"><i class="fa-solid fa-paper-plane" inert></i> {{localize "fvtt-mod-handouts.show.button"}}</button>
+        <button type="button" class="hdt-btn pri" data-action="optGo"><i class="fa-solid fa-paper-plane" inert></i> {{localize "fvtt-mod-scrollcase.show.button"}}</button>
       </div>
     </div>
   </div>

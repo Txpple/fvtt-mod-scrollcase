@@ -1,5 +1,5 @@
 {
-  "fvtt-mod-handouts": {
+  "fvtt-mod-scrollcase": {
     "settings": {
       "enabled": {
         "name": "Enabled",
@@ -7,11 +7,11 @@
       },
       "classic": {
         "name": "Classic Mode",
-        "hint": "On this client, the Journal button opens Foundry's own Journal tab instead of Handouts. The Handouts window has a Classic Mode button, and the Journal tab a Handouts button to come back."
+        "hint": "On this client, the Journal button opens Foundry's own Journal tab instead of Scroll Case. The Scroll Case window has a Classic Mode button, and the Journal tab a Scroll Case button to come back."
       },
       "showKeeps": {
         "name": "Show keeps it visible",
-        "hint": "When the GM shows a page, it is also made visible to the players it was shown to, so they can open it again from their Handouts. Off: Show only flashes it, and who can open the page is left as it is. The Show options choose either way each time."
+        "hint": "When the GM shows a page, it is also made visible to the players it was shown to, so they can open it again from their Scroll Case. Off: Show only flashes it, and who can open the page is left as it is. The Show options choose either way each time."
       },
       "assetFolders": {
         "name": "Asset folders",
@@ -29,7 +29,7 @@
       }
     },
     "library": {
-      "title": "Handouts"
+      "title": "Scroll Case"
     },
     "search": {
       "label": "Search handouts",
@@ -55,13 +55,13 @@
     },
     "classic": {
       "button": "Classic Mode",
-      "hint": "Foundry's own journal, on this client. The Journal tab then has a Handouts button to come back.",
-      "on": "Classic Mode: the Journal button opens Foundry's own journal on this client. Its Handouts button brings this window back.",
-      "back": "Handouts"
+      "hint": "Foundry's own journal, on this client. The Journal tab then has a Scroll Case button to come back.",
+      "on": "Classic Mode: the Journal button opens Foundry's own journal on this client. Its Scroll Case button brings this window back.",
+      "back": "Scroll Case"
     },
     "rail": {
       "label": "Views and journals",
-      "handouts": "Handouts",
+      "handouts": "Scroll Case",
       "journals": "Journals"
     },
     "view": {
@@ -106,7 +106,7 @@
       "everyone": "everyone",
       "allPlayers": "all players",
       "revealed": "“{name}” is now visible to {whom}.",
-      "revealedFinder": "“{name}” is now visible to all players. Undo is at the top of the Handouts window.",
+      "revealedFinder": "“{name}” is now visible to all players. Undo is at the top of the Scroll Case window.",
       "undo": "Undo",
       "undoHint": "Put who can open it back as it was before the Show (the popout already on their screens stays)",
       "undone": "{name} is back as it was before the Show.",
@@ -165,7 +165,7 @@
       "fileNote": "A picture not in a journal: no player can open it again until it is added to the Handouts journal. Show still sends it as an image popout.",
       "noPlayers": "This world has no players yet.",
       "everyone": "Everyone",
-      "canSeeNote": "Highlighted players can open it again from their Handouts.",
+      "canSeeNote": "Highlighted players can open it again from their Scroll Case.",
       "lastShown": "Last shown from this browser",
       "fileLine": "A picture not in a journal yet",
       "pageLine": "{kind} page in {journal}",
@@ -202,9 +202,9 @@
       "to": "To",
       "everyone": "Everyone ({n} connected)",
       "everyoneNone": "Everyone (no one connected)",
-      "keep": "Keep it in their Handouts",
+      "keep": "Keep it in their Scroll Case",
       "keepFile": "Add it to the Handouts journal",
-      "keepOn": "They can open it again from their Handouts.",
+      "keepOn": "They can open it again from their Scroll Case.",
       "keepOff": "They see it now; who can open it later is left as it is.",
       "keepFileOn": "An image page is made in the Handouts journal, visible to them.",
       "keepFileOff": "An image popout only: no page, nothing written.",

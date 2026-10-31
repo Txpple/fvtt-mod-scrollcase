@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * The decisions that need no Foundry: what a card shows, what a search matches and why, and the
- * ownership map a "who can see it" choice comes to. Tested in tests/handouts.test.js.
+ * ownership map a "who can see it" choice comes to. Tested in tests/scrollcase.test.js.
  */
 
 /** Foundry's ownership levels (CONST.DOCUMENT_OWNERSHIP_LEVELS), copied so this file needs no Foundry. */

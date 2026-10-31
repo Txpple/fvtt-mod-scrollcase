@@ -3,7 +3,7 @@
  * ownership (the Show dialog's and the ownership dialog's write), a page's section, a new section,
  * a new image page for a kept file. Showing is a message on the module's own socket channel (not
  * data: nothing is stored): each player's client it is for opens it in the Reader, or, in Classic
- * Mode or for a PDF, as Foundry's own Show would (handouts.js, `receiveShow`).
+ * Mode or for a PDF, as Foundry's own Show would (scrollcase.js, `receiveShow`).
  *
  * Ownership writes on one page run one after another, each reading the page as the last one left
  * it, so two quick toggles never build on the same stale map. A Show that reveals a page records
@@ -12,7 +12,7 @@
  */
 
 import { log, MODULE_ID, setting, t } from "./common.js";
-import { kindOf, LEVEL, prettyName, visibilityWrite, whoSees } from "./decide/handouts.js";
+import { kindOf, LEVEL, prettyName, visibilityWrite, whoSees } from "./decide/scrollcase.js";
 import * as memory from "./memory.js";
 import { Reader } from "./reader.js";
 
@@ -129,7 +129,7 @@ const toWords = ids => (ids ? ids.map(id => game.users.get(id)?.name ?? id).join
 
 /**
  * Show a page to players, now. `to` is null (everyone connected) or user ids; `keep` makes the
- * page visible to them first, so it stays in their Handouts. Their clients open it in the Reader,
+ * page visible to them first, so it stays in their Scroll Case. Their clients open it in the Reader,
  * or, with `picture` (a src), that picture alone: then the page's ownership is never touched,
  * since the players were shown the picture and not the page.
  * @returns {Promise<{ revealed: object|null } | null>} null when the same thing was already being shown
@@ -151,7 +151,7 @@ export async function showPage(page, { to = null, keep = setting("showKeeps"), t
     const users = to ?? [];
     send({ uuid: page.uuid, users, picture: picture || null, title, caption });
     memory.noteShown(page.uuid, toWords(to), to);
-    Hooks.callAll("handouts.shown", page, users);
+    Hooks.callAll("scrollcase.shown", page, users);
     return { revealed };
   } finally {
     showing.delete(page.uuid);
@@ -204,7 +204,7 @@ export async function showFile(src, { to = null, keep = setting("showKeeps"), ti
     }
     send({ src, name: prettyName(src), users: to ?? [], title });
     memory.noteShown(src, toWords(to), to);
-    Hooks.callAll("handouts.shown", null, to ?? [], src);
+    Hooks.callAll("scrollcase.shown", null, to ?? [], src);
     return null;
   } finally {
     showing.delete(src);

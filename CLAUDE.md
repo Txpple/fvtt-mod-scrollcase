@@ -1,16 +1,16 @@
-# fvtt-mod-handouts — working notes for sessions in this repo
+# fvtt-mod-scrollcase — working notes for sessions in this repo
 
-**What this is.** Open Roll 5e: Handouts, a Foundry VTT module: the journal as a library of cards, a search that
+**What this is.** Open Roll 5e: Scroll Case, a Foundry VTT module: the journal as a library of cards, a search that
 finds a picture by any word, one-click Show, a keyboard finder. A skin over Foundry's own journal: the sidebar's
 Journal button opens it, Classic Mode puts the stock journal back per client. Part of Open Roll 5e (the suite repo
-is `..`, its CLAUDE.md has the family's conventions; the plan is `../docs/plans/handouts.md`). Plain ES modules,
+is `..`, its CLAUDE.md has the family's conventions; the plan is `../docs/plans/scrollcase.md`). Plain ES modules,
 no build step, no libWrapper, no socketlib, MIT.
 
-**State (2026-10-30).** 0.1.0 built on the user's word ("build out on sandbox ... the journal side button go to our
-new UI ... a Classic Mode"), local only: no GitHub repo, nothing committed or released, not in `repos.json`. Two
-adversarial review passes (four Opus reviewers) and a third on Playwright screenshots, every finding fixed.
-Deployed to the sandbox (mirrored from prod the same evening; a mirror removes it again) and walked GREEN by
-`tools/live-check.mjs --walk` (43 checks); `npm run verify` green (76 tests).
+**State (2026-10-30).** 1.0.0, the first release, named Scroll Case on the user's word (built as "Handouts" the same
+evening; the setup screen's `getPackages`, 7,086 modules, has no "Scroll Case" and no `scrollcase`). Before it, two
+adversarial review passes (four Opus reviewers) and a third on Playwright screenshots, every finding fixed; the
+Reader (a card's page simply) and a Show opening in it followed on the user's word. `npm run verify` green (76
+tests); `tools/live-check.mjs --walk` GREEN on the sandbox (43 checks).
 
 ## The rules this module keeps
 
@@ -27,7 +27,7 @@ Deployed to the sandbox (mirrored from prod the same evening; a mirror removes i
   `renderJournalDirectory` only while Classic is on.
 - **A Show is a message, opened in the Reader**: `show.js` sends `{ action: "show", uuid | src, users, picture,
   title, caption }` on the module's socket channel (`socket: true`; a manifest change, so a new channel needs a
-  server restart); each client it is for opens the Reader (`receiveShow` in `handouts.js`; `shown`, so it stays
+  server restart); each client it is for opens the Reader (`receiveShow` in `scrollcase.js`; `shown`, so it stays
   open without the page's permission, as Foundry's Show allows), or, in Classic Mode or for a PDF, Foundry's own
   view (`ImagePopout`, `Journal._showEntry`). One show per page or file at a time. A player records it as shown and
   seen; Foundry's own `showEntry` and `shareImage` events (a GM in Classic Mode) are heard too, pages only.
@@ -48,14 +48,14 @@ Deployed to the sandbox (mirrored from prod the same evening; a mirror removes i
 
 ## How the code is laid out
 
-- `scripts/decide/handouts.js` (`// @ts-check`, pure): `kindOf`, `plainText`, `excerptOf`, `firstImage`,
+- `scripts/decide/scrollcase.js` (`// @ts-check`, pure): `kindOf`, `plainText`, `excerptOf`, `firstImage`,
   `allImages`, `pictureOf`, `stripSecrets`, paths (`fileName`, `folderOf`, `prettyName`, `normPath`, `samePath`,
   `isImageFile`, `folderList`), `matchWhy`, `searchFields`, `levelOf`, `visibilityWrite`, `whoSees`, `sameIds`,
-  `remember`. Tested in `tests/handouts.test.js`.
+  `remember`. Tested in `tests/scrollcase.test.js`.
 - `scripts/common.js`: the id, the logger, `t`, `setting`.
-- `scripts/handouts.js`: the entry point; the settings and the keybinding at `init`; the Journal button and the
+- `scripts/scrollcase.js`: the entry point; the settings and the keybinding at `init`; the Journal button and the
   directory's way back; the refresh hooks; the players' show listeners, the stylesheet probe, `module.api`.
-- `scripts/library.js`: the card data cache, `pageCards`, `loadFiles` and `fileCards`, `HandoutsWindow` (context,
+- `scripts/library.js`: the card data cache, `pageCards`, `loadFiles` and `fileCards`, `ScrollCaseWindow` (context,
   actions, search, focus, drag and drop, the reveal strip).
 - `scripts/show.js`: every world write and every show, the reveal and its Undo; `players`, `whoCanSee`,
   `openInJournal`, `openForReading`, `openPicture`.
@@ -63,6 +63,6 @@ Deployed to the sandbox (mirrored from prod the same evening; a mirror removes i
 - `scripts/reader.js`: `Reader`, one page's picture and text (enriched with `secrets: page.isOwner`), one window
   per page, following its page; what a card click (a player's) or Enter (the GM's) opens.
 - `scripts/memory.js`: the browser's record.
-- `templates/library.hbs`, `templates/finder.hbs`, `templates/reader.hbs`, `styles/handouts.css`, `lang/en.json`.
+- `templates/library.hbs`, `templates/finder.hbs`, `templates/reader.hbs`, `styles/scrollcase.css`, `lang/en.json`.
 - `tools/live-check.mjs` (the walk), `tools/shots.mjs` (24 states and the words audit); both refuse any host but
   `FOUNDRY_HOST=local`.

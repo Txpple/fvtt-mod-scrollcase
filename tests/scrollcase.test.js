@@ -21,7 +21,7 @@ import {
   stripSecrets,
   visibilityWrite,
   whoSees
-} from "../scripts/decide/handouts.js";
+} from "../scripts/decide/scrollcase.js";
 
 const { INHERIT, NONE, LIMITED, OBSERVER, OWNER } = LEVEL;
 const P = ["u1", "u2", "u3"];
