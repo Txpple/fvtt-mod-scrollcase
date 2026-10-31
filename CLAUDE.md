@@ -7,7 +7,7 @@ is `..`, its CLAUDE.md has the family's conventions; the plan is `../docs/plans/
 no build step, no libWrapper, no socketlib, MIT.
 
 **State (2026-10-30).** 1.0.1 (the JSON export of the cards in view: the head's button, text only, no pictures),
-released; prod runs 1.0.0. 1.0.0, the first release, named Scroll Case on the user's word (built as "Handouts" the same
+released and on prod (the installer, byte-identical). 1.0.0, the first release, named Scroll Case on the user's word (built as "Handouts" the same
 evening; the setup screen's `getPackages`, 7,086 modules, has no "Scroll Case" and no `scrollcase`). Before it, two
 adversarial review passes (four Opus reviewers) and a third on Playwright screenshots, every finding fixed; the
 Reader (a card's page simply) and a Show opening in it followed on the user's word. `npm run verify`
