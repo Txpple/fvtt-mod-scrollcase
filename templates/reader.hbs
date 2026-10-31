@@ -1,6 +1,6 @@
 <div class="hdt-reader">
   <div class="hdt-reader-body">
-    {{#if name}}<h2 class="hdt-reader-title" dir="auto">{{name}}</h2>{{/if}}
+    {{#if showName}}{{#if name}}<h2 class="hdt-reader-title" dir="auto">{{name}}</h2>{{/if}}{{/if}}
     {{#if isImage}}
     <figure class="hdt-reader-figure">
       <img src="{{src}}" alt="{{name}}">
@@ -11,7 +11,7 @@
     {{#if html}}<div class="hdt-reader-text">{{{html}}}</div>{{/if}}
     {{#if empty}}<p class="hdt-reader-empty">{{localize "fvtt-mod-handouts.reader.empty"}}</p>{{/if}}
   </div>
-  {{#if isGM}}
+  {{#if canOpen}}
   <footer class="hdt-reader-foot">
     <button type="button" class="hdt-btn" data-action="openJournal"><i class="fa-solid fa-book-open" inert></i> {{localize "fvtt-mod-handouts.detail.openJournal"}}</button>
   </footer>

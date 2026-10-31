@@ -207,6 +207,7 @@ export class Finder extends HandlebarsApplicationMixin(ApplicationV2) {
       // The reveal's Undo lives in the Handouts window's strip; the toast says where.
       if (revealed) ui.notifications.info(t("show.revealedFinder", { name: card.name }));
       if (!online) ui.notifications.warn(t("show.nobodyOnline", { name: card.name }));
+      else ui.notifications.info(t("show.sent", { name: card.name, whom: t("show.everyone") }));
       HandoutsWindow.refresh();
     } catch (err) {
       log.error("the finder's action failed", err);

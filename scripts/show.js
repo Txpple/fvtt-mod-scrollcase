@@ -1,8 +1,9 @@
 /**
  * The module's only writes to the world, each one the stock journal makes itself: a page's
  * ownership (the Show dialog's and the ownership dialog's write), a page's section, a new section,
- * a new image page for a kept file. Showing goes through Foundry's own Journal.show and
- * Journal.showImage, so the players' clients open it exactly as the stock Show Players button would.
+ * a new image page for a kept file. Showing is a message on the module's own socket channel (not
+ * data: nothing is stored): each player's client it is for opens it in the Reader, or, in Classic
+ * Mode or for a PDF, as Foundry's own Show would (handouts.js, `receiveShow`).
  *
  * Ownership writes on one page run one after another, each reading the page as the last one left
  * it, so two quick toggles never build on the same stale map. A Show that reveals a page records
@@ -10,12 +11,18 @@
  * changed since.
  */
 
-import { log, setting, t } from "./common.js";
+import { log, MODULE_ID, setting, t } from "./common.js";
 import { kindOf, LEVEL, prettyName, visibilityWrite, whoSees } from "./decide/handouts.js";
 import * as memory from "./memory.js";
 import { Reader } from "./reader.js";
 
-const Journal = () => foundry.documents?.collections?.Journal ?? globalThis.Journal;
+/** The module's socket channel (module.json declares `socket: true`). */
+export const CHANNEL = `module.${MODULE_ID}`;
+
+/** Tell the players' clients to open something: a page (`uuid`), or a picture on no page (`src`). */
+function send(message) {
+  game.socket.emit(CHANNEL, { action: "show", from: game.user.id, ...message });
+}
 
 /** The players: every user who is neither a GM (Gamemaster or Assistant) nor banned, connected or not. */
 export const players = () => game.users.filter(u => !u.isGM && u.role > CONST.USER_ROLES.NONE);
@@ -122,10 +129,9 @@ const toWords = ids => (ids ? ids.map(id => game.users.get(id)?.name ?? id).join
 
 /**
  * Show a page to players, now. `to` is null (everyone connected) or user ids; `keep` makes the
- * page visible to them first, so it stays in their Handouts. An image page goes as Foundry's image
- * popout, a text page as the journal sheet open on that page, or, with `picture` (a src), as the
- * popout of that picture alone: then the page's ownership is never touched, since the players were
- * shown the picture and not the page.
+ * page visible to them first, so it stays in their Handouts. Their clients open it in the Reader,
+ * or, with `picture` (a src), that picture alone: then the page's ownership is never touched,
+ * since the players were shown the picture and not the page.
  * @returns {Promise<{ revealed: object|null } | null>} null when the same thing was already being shown
  */
 export async function showPage(page, { to = null, keep = setting("showKeeps"), title = true, caption = true, picture = null } = {}) {
@@ -143,18 +149,7 @@ export async function showPage(page, { to = null, keep = setting("showKeeps"), t
       }
     }
     const users = to ?? [];
-    const image = picture || (kindOf(page.type) === "image" ? page.src : null);
-    if (image) {
-      Journal().showImage(image, {
-        users,
-        title: page.name,
-        caption: caption && !picture ? (page.image?.caption ?? "") : "",
-        uuid: picture ? undefined : page.uuid,
-        showTitle: title
-      });
-    } else {
-      await Journal().show(page, { force: true, users });
-    }
+    send({ uuid: page.uuid, users, picture: picture || null, title, caption });
     memory.noteShown(page.uuid, toWords(to), to);
     Hooks.callAll("handouts.shown", page, users);
     return { revealed };
@@ -195,8 +190,8 @@ export async function keepFile(src) {
 }
 
 /**
- * Show a file that is on no page: kept first when `keep` (its new page returned), else the bare
- * image popout (null). Undefined when the same file was already being shown.
+ * Show a file that is on no page: kept first when `keep` (its new page returned), else the picture
+ * alone (null). Undefined when the same file was already being shown.
  */
 export async function showFile(src, { to = null, keep = setting("showKeeps"), title = true } = {}) {
   if (showing.has(src)) return undefined;
@@ -207,7 +202,7 @@ export async function showFile(src, { to = null, keep = setting("showKeeps"), ti
       await showPage(page, { to, keep: true, title });
       return page;
     }
-    Journal().showImage(src, { users: to ?? [], title: prettyName(src), showTitle: title });
+    send({ src, name: prettyName(src), users: to ?? [], title });
     memory.noteShown(src, toWords(to), to);
     Hooks.callAll("handouts.shown", null, to ?? [], src);
     return null;

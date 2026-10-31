@@ -80,7 +80,7 @@ cleanup = async () => {
           await game.settings.set(id, "classic", prior.classic);
         }
         for (const app of [...foundry.applications.instances.values()]) {
-          if (["handouts-library", "handouts-finder"].includes(app.id) || app.constructor.name === "ImagePopout") await app.close();
+          if (["handouts-library", "handouts-finder"].includes(app.id) || app.id?.startsWith("handouts-reader-") || app.constructor.name === "ImagePopout") await app.close();
         }
       },
       { id: MODULE_ID, scratch: SCRATCH, keep: SCRATCH_KEEP, userName: TEMP_USER, prior }
@@ -238,13 +238,14 @@ try {
         out.none = sees(picture).length === 0;
         out.mapNone = { ...picture._source.ownership };
         out.letterUntouched = letter.testUserPermission(game.users.get(userId), "OBSERVER") === false;
+        // Just the picture of a GM-only text page, kept, to the temp player (not connected yet, so no
+        // screen gets it): the page's ownership is never touched.
+        const beforePic = JSON.stringify(letter._source.ownership);
+        await game.modules.get(id).api.show.showPage(letter, { keep: true, picture: "icons/svg/skull.svg", to: [userId] });
+        out.pictureOnlyKept = JSON.stringify(letter._source.ownership) === beforePic && !letter.testUserPermission(game.users.get(userId), "OBSERVER");
         // The letter, visible to the temp player for D: its secret section must never reach them.
         await game.modules.get(id).api.show.setVisible(letter, [userId]);
         out.gmLetterPicture = await wait(() => !!pageCardsPicture(letter.uuid));
-        // Just the picture of a text page: the page's ownership is never touched.
-        const beforePic = JSON.stringify(letter._source.ownership);
-        await game.modules.get(id).api.show.showPage(letter, { keep: true, picture: "icons/svg/skull.svg" });
-        out.pictureOnlyKept = JSON.stringify(letter._source.ownership) === beforePic;
         // a section, made and used
         const cat = (await entry.createEmbeddedDocuments("JournalEntryCategory", [{ name: "ZZ Section", sort: 100000 }]))[0];
         await letter.update({ category: cat.id });
@@ -378,23 +379,28 @@ try {
     );
     await settle(1200);
     const D2 = await fp.evaluate(async uuid => {
-      const popout = [...foundry.applications.instances.values()].find(a => a.constructor.name === "ImagePopout");
+      const page = await fromUuid(uuid);
+      const reader = foundry.applications.instances.get(`handouts-reader-${page.id}`);
+      const stock = [...foundry.applications.instances.values()].some(
+        a => (a.constructor.name === "ImagePopout" || a.document?.documentName === "JournalEntry") && a.rendered
+      );
       const record = game.modules.get("fvtt-mod-handouts").api.memory.load();
       const win = foundry.applications.instances.get("handouts-library");
       win?.element.querySelector('.hdt-row[data-view="recent"]')?.click();
       await new Promise(r => setTimeout(r, 400));
       const card = win?.element.querySelector(`.hdt-card[data-key="${uuid}"]`);
       return {
-        popout: !!popout,
-        popoutTitle: popout?.title ?? popout?.options?.window?.title ?? null,
+        reader: !!reader?.rendered,
+        readerTitle: reader?.title ?? null,
+        stock,
         recent: record.recent.some(r => r.key === uuid),
         listed: !!card,
         unseen: card?.classList.contains("unseen") ?? false
       };
     }, C.pictureUuid);
-    assert(D2.popout, `the GM's Show reaches the player as Foundry's image popout (${D2.popoutTitle})`);
+    assert(D2.reader && !D2.stock, `the GM's Show reaches the player in the Reader, not Foundry's popout (${D2.readerTitle})`);
     assert(D2.recent && D2.listed, "it lands in the player's Recently shown");
-    assert(!D2.unseen, "not marked New: Foundry already opened it on the player's screen");
+    assert(!D2.unseen, "not marked New: it opened on the player's screen");
     const D3 = await f.evaluate(
       async ({ uuid, userId }) => (await fromUuid(uuid)).testUserPermission(game.users.get(userId), "OBSERVER"),
       { uuid: C.pictureUuid, userId: temp.userId }

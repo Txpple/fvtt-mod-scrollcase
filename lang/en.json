@@ -131,7 +131,8 @@
         "add": "Add and show to everyone"
       },
       "undoChanged": "{name} has changed since the Show, so it was left as it is now.",
-      "dismiss": "Dismiss"
+      "dismiss": "Dismiss",
+      "sent": "{name} shown to {whom}."
     },
     "error": {
       "show": "Showing {name} failed; the console has the reason.",

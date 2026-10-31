@@ -11,6 +11,7 @@
  */
 
 import { log, MODULE_ID, setting, t } from "./common.js";
+import { kindOf } from "./decide/handouts.js";
 import { Finder } from "./finder.js";
 import { HandoutsWindow, openClassicJournal } from "./library.js";
 import * as memory from "./memory.js";
@@ -162,28 +163,65 @@ Hooks.on("deleteUser", refresh);
 /*  ready: what a player is shown, the probe, the API */
 /* -------------------------------------------------- */
 
+/**
+ * A Show sent from Handouts, on a client it is for: the page (or the picture) in the Reader, the GM
+ * having shown it so it stays open even without the page's permission. In Classic Mode, or for a
+ * PDF the Reader cannot show, it opens as Foundry's own Show would. A player's client records it
+ * as shown and seen.
+ */
+function receiveShow(message, heard) {
+  if (message?.action !== "show" || message.from === game.user.id) return;
+  if (message.users?.length && !message.users.includes(game.user.id)) return;
+  const classic = setting("classic");
+  const ImagePopout = foundry.applications?.apps?.ImagePopout;
+  const Journal = foundry.documents?.collections?.Journal ?? globalThis.Journal;
+  if (message.src) {
+    if (classic && ImagePopout) return void new ImagePopout({ src: message.src, window: { title: message.name } }).render({ force: true });
+    return void Reader.openFile(message.src, message.name, { title: message.title });
+  }
+  const page = fromUuidSync(message.uuid, { strict: false });
+  if (page?.documentName !== "JournalEntryPage") return;
+  const kind = kindOf(page.type);
+  if (classic || kind === "pdf") {
+    const image = message.picture || (kind === "image" ? page.src : null);
+    if (image && ImagePopout) {
+      new ImagePopout({ src: image, uuid: message.picture ? undefined : page.uuid, caption: message.caption && !message.picture ? (page.image?.caption ?? "") : "", window: { title: page.name } }).render({ force: true });
+    } else void Journal._showEntry(page.uuid, true);
+  } else {
+    void Reader.open(page, { shown: true, picture: message.picture, caption: message.caption, title: message.title });
+  }
+  if (!game.user.isGM) heard(page.uuid);
+}
+
 Hooks.once("ready", () => {
   if (!setting("enabled")) return;
 
-  // Foundry's own show events, heard as every client hears them: a player's Recently shown.
-  // Foundry opens the sheet or the popout itself; this only remembers that it came.
+  // What is shown to this player, recorded as shown and seen: a Show from Handouts (below), and
+  // Foundry's own show events (a GM in Classic Mode), which Foundry opens itself.
   try {
+    const heard = uuid => {
+      try {
+        if (typeof uuid !== "string" || fromUuidSync(uuid, { strict: false })?.documentName !== "JournalEntryPage") return;
+        memory.noteShown(uuid, t("show.toYou"));
+        memory.noteSeen(uuid);
+        refresh();
+      } catch (err) {
+        log.error("recording a shown handout failed", err);
+      }
+    };
     if (!game.user.isGM) {
       // Only a page is a handout: a whole journal, a token's or an actor's image shown is left out.
-      // Foundry has opened it on this screen: it is recorded as shown and as seen.
-      const heard = uuid => {
-        try {
-          if (typeof uuid !== "string" || fromUuidSync(uuid, { strict: false })?.documentName !== "JournalEntryPage") return;
-          memory.noteShown(uuid, t("show.toYou"));
-          memory.noteSeen(uuid);
-          refresh();
-        } catch (err) {
-          log.error("recording a shown handout failed", err);
-        }
-      };
       game.socket.on("showEntry", uuid => heard(uuid));
       game.socket.on("shareImage", data => heard(data?.uuid));
     }
+    // A Show from Handouts: the Reader on this screen (Foundry's own view in Classic Mode).
+    game.socket.on(show.CHANNEL, message => {
+      try {
+        receiveShow(message, heard);
+      } catch (err) {
+        log.error("opening a shown handout failed", err);
+      }
+    });
   } catch (err) {
     log.error("listening for shown handouts failed", err);
   }

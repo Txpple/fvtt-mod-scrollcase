@@ -23,8 +23,8 @@ journal back on any client at any time. Switch it off and every journal is exact
 - **The rail.** *All*, *Visible to players*, *GM only*, *Recently shown*, *Pinned*, *Not in a journal*, then the
   journals by folder with their sections. Drop a card on a section of its own journal to file it there, on its
   journal to take it out of its section, on *Pinned* to pin it.
-- **Show.** Hover a card and press its button. It says what it will do: **Show** (to every connected player, as
-  Foundry shows it: an image as the image popout, anything else as the journal open on that page), **Reveal** (the
+- **Show.** Hover a card and press its button. It says what it will do: **Show** (to every connected player: it
+  opens on their screens in the Reader, or as Foundry's own Show for a player in Classic Mode), **Reveal** (the
   page is not yet visible to every player: it is made visible, so it stays in their Handouts, then shown; the
   *Show keeps it visible* setting), or **Add & show** (a picture not in a journal). A reveal leaves a strip at the
   top with **Undo**, which puts back who can open the page, unless it has changed since. The chevron opens the
@@ -58,8 +58,8 @@ journal back on any client at any time. Switch it off and every journal is exact
 | A picture added | a new image page in the Handouts journal | an ordinary page |
 | Pins, *Recently shown*, *New*, the view, the type and the card size | this browser's local storage | gone with the browser |
 
-Nothing else: no flags, no documents of the module's own, no socket of its own, no class patched. Showing a text
-page opens it on the GM's own screen too: that is Foundry's Show.
+Nothing else: no flags, no documents of the module's own, no class patched. A Show is a message on the module's
+own socket channel (`socket: true`), which stores nothing.
 
 ## Installation
 

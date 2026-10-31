@@ -903,6 +903,7 @@ export class HandoutsWindow extends HandlebarsApplicationMixin(ApplicationV2) {
       }
       const reached = to ? to.some(id => online.has(id)) : online.size > 0;
       if (!reached) ui.notifications.warn(t("show.nobodyOnline", { name }));
+      else ui.notifications.info(t("show.sent", { name, whom: to ? to.map(id => game.users.get(id)?.name ?? "?").join(", ") : t("show.everyone") }));
     } catch (err) {
       log.error("showing failed", err);
       ui.notifications.error(t("error.show", { name }));

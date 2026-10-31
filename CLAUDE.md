@@ -10,7 +10,7 @@ no build step, no libWrapper, no socketlib, MIT.
 new UI ... a Classic Mode"), local only: no GitHub repo, nothing committed or released, not in `repos.json`. Two
 adversarial review passes (four Opus reviewers) and a third on Playwright screenshots, every finding fixed.
 Deployed to the sandbox (mirrored from prod the same evening; a mirror removes it again) and walked GREEN by
-`tools/live-check.mjs --walk` (40 checks); `npm run verify` green (76 tests).
+`tools/live-check.mjs --walk` (43 checks); `npm run verify` green (76 tests).
 
 ## The rules this module keeps
 
@@ -25,10 +25,12 @@ Deployed to the sandbox (mirrored from prod the same evening; a mirror removes i
   Classic Mode is on for this client. A right-click still reaches the sidebar. If the window fails to open, the stock
   tab opens (fail open). Classic Mode's way back is one button in the stock directory's header, added on
   `renderJournalDirectory` only while Classic is on.
-- **Showing is Foundry's**: `Journal.showImage` for an image page or a picture alone, `Journal.show(page, { force })`
-  for anything else, a bare file with `showImage`. One show per page or file at a time. A player's *Recently shown*
-  is heard from Foundry's own `showEntry` and `shareImage` socket events (pages only, marked seen); the module emits
-  no socket of its own.
+- **A Show is a message, opened in the Reader**: `show.js` sends `{ action: "show", uuid | src, users, picture,
+  title, caption }` on the module's socket channel (`socket: true`; a manifest change, so a new channel needs a
+  server restart); each client it is for opens the Reader (`receiveShow` in `handouts.js`; `shown`, so it stays
+  open without the page's permission, as Foundry's Show allows), or, in Classic Mode or for a PDF, Foundry's own
+  view (`ImagePopout`, `Journal._showEntry`). One show per page or file at a time. A player records it as shown and
+  seen; Foundry's own `showEntry` and `shareImage` events (a GM in Classic Mode) are heard too, pages only.
 - **Who can see a page** is `visibilityWrite` (pure, tested): only the players whose visibility changes are touched;
   everyone at once moves the default to Observer, no one at once back to inherit (None when the journal lets players
   see); null when nothing changes, so inheritance survives. Writes on one page are queued (`show.js`). Players are
