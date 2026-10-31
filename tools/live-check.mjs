@@ -8,8 +8,8 @@
 // who can see the image page three ways and reads the ownership back, files the text page under a
 // new section, keeps a file as a handout (into a scratch Handouts journal the setting names for
 // the run), and has a temporary player connect: the player's window lists only what they can see,
-// the GM's Show reaches the player as Foundry's popout and lands in their Recently shown, marked
-// New. Classic Mode is switched on and off through the Journal button and the directory's way
+// the GM's Show reaches the player in the Reader, is recorded as shown and listed in their All, not
+// marked New. Classic Mode is switched on and off through the Journal button and the directory's way
 // back. The scratch journals, the temp user and the settings go back in `finally`.
 import { Foundry, foundryConfig, loadEnv } from "fvtt-mcp-dnd5e/client";
 
@@ -386,7 +386,7 @@ try {
       );
       const record = game.modules.get("fvtt-mod-scrollcase").api.memory.load();
       const win = foundry.applications.instances.get("scrollcase-library");
-      win?.element.querySelector('.hdt-row[data-view="recent"]')?.click();
+      win?.element.querySelector('.hdt-row[data-view="all"]')?.click();
       await new Promise(r => setTimeout(r, 400));
       const card = win?.element.querySelector(`.hdt-card[data-key="${uuid}"]`);
       return {
@@ -399,7 +399,7 @@ try {
       };
     }, C.pictureUuid);
     assert(D2.reader && !D2.stock, `the GM's Show reaches the player in the Reader, not Foundry's popout (${D2.readerTitle})`);
-    assert(D2.recent && D2.listed, "it lands in the player's Recently shown");
+    assert(D2.recent && D2.listed, "it is recorded as shown and listed in the player's All");
     assert(!D2.unseen, "not marked New: it opened on the player's screen");
     const D3 = await f.evaluate(
       async ({ uuid, userId }) => (await fromUuid(uuid)).testUserPermission(game.users.get(userId), "OBSERVER"),

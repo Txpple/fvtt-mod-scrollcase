@@ -269,9 +269,9 @@ try {
   );
   await settle(1500);
   await shot(fp.page, "20-player-shown-popout");
-  await shot(fp.page, "21-player-recent", async () => {
+  await shot(fp.page, "21-player-after-show", async () => {
     for (const app of [...foundry.applications.instances.values()]) if (app.constructor.name === "ImagePopout") await app.close();
-    foundry.applications.instances.get("scrollcase-library")?.element.querySelector('.hdt-row[data-view="recent"]')?.click();
+    foundry.applications.instances.get("scrollcase-library")?.element.querySelector('.hdt-row[data-view="all"]')?.click();
   });
   await shot(fp.page, "22-player-new", async () => {
     foundry.applications.instances.get("scrollcase-library")?.element.querySelector('.hdt-row[data-view="unseen"]')?.click();

@@ -48,8 +48,8 @@ player (or you) the stock journal back with one click.
 
 ### For the players
 
-- **Their Journal button opens their Scroll Case**: everything the GM has given them, *Recently shown* first,
-  anything they haven't opened yet marked **New**.
+- **Their Journal button opens their Scroll Case**: everything the GM has given them under *All*,
+  and *New* for anything they haven't opened yet.
 - **The Reader.** Clicking a card, or being shown something by the GM, opens a simple window with just that
   page: its name, its picture and its text. No page list, no journal around it. It updates when the GM edits
   the page, and it never shows the GM's secret sections.

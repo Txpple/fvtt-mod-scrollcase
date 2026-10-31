@@ -159,10 +159,8 @@
         "journal": "No pages here."
       },
       "player": {
-        "recent": "Nothing shown to you yet. What the GM shows you lands here.",
         "unseen": "Nothing new.",
         "all": "Nothing here yet. What the GM shows you lands here.",
-        "pinned": "Nothing pinned.",
         "journal": "No pages here."
       },
       "searchHere": "Nothing in this view matches “{q}”."

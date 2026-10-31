@@ -429,10 +429,9 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
       });
     }
 
-    const viewIds = gm ? ["all", "visible", "gm", "recent", "pinned", "loose"] : ["recent", "unseen", "all", "pinned"];
-    if (!this.#view || !this.#validView(this.#view, viewIds)) {
-      this.#view = gm ? "all" : pages.some(c => memory.lastShown(c.key)) ? "recent" : "all";
-    }
+    // A player's rail is All, then New: a player cannot pin, and what the GM shows them opens on their screen.
+    const viewIds = gm ? ["all", "visible", "gm", "recent", "pinned", "loose"] : ["all", "unseen"];
+    if (!this.#view || !this.#validView(this.#view, viewIds)) this.#view = "all";
     const view = this.#view;
     const inView = c => c.key === this.#sticky || this.#inViewOf(c, view, seeing.get(c.key));
 
