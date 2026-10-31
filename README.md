@@ -1,5 +1,11 @@
 # Open Roll 5e: Scroll Case
 
+> **Retired.** Scroll Case is now the journal case of
+> [Open Roll 5e: Card Catalogue](https://github.com/Txpple/fvtt-mod-cardcatalogue), which carries every behaviour
+> below over whole, with the scenes, the actors and the items beside it. Install Card Catalogue instead: its first
+> load carries Scroll Case's settings, each browser's history and its page links over. This repository is archived;
+> 1.0.4 was the last release.
+
 A Foundry VTT module for the GM who keeps losing the picture they meant to show. **Scroll Case** turns the
 journal into a case of cards: every handout, map, portrait and letter at a glance, found in a keystroke, shown
 to the players in one click, and read by them in a plain, quiet window with just the picture and the words.
