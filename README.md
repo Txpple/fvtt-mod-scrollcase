@@ -37,7 +37,11 @@ player (or you) the stock journal back with one click.
   shortlist. *Visible to players*, *GM only*, *Recently shown* and *Pinned* views sit at the top.
 - **The detail panel.** Click a card for the picture large, where it lives, its section, who can see it (player
   by player), when you last showed it and *Show again* to the same players, *Open in journal* for editing, and
-  a copyable link.
+  two links to copy: Foundry's own `@UUID` link, to paste into a journal, a description or chat, and a web link.
+- **A web link to a page.** `https://<your game>/game?page=<the page's id>` opens the page in the Reader for
+  anyone who can see it. Someone not logged in gets the join screen first, and Foundry brings them back to the
+  page once they join. Anyone else gets a notice and nothing opens. The link holds no copy of the page: it is
+  always read live from the world, so it never goes stale and never shows a secret section to a player.
 - **Export what you see.** The export button beside the heading saves the cards in view as a JSON file, in their
   order, with the view, the type and the search applied: each page's name, journal, folder, section, caption and
   text (as plain text and as HTML). Pictures are left out; an image, video or PDF page gives its file path.
@@ -96,7 +100,7 @@ The finder's key is under *Configure Controls*.
 - `scrollcase.shown(page, users, src)` fires on the showing client after a Show (`page` is null for a picture
   not in a journal).
 - `game.modules.get("fvtt-mod-scrollcase").api`: `open({ key, opts })` (the window, a card picked),
-  `finder()`, `classic(on)`, `memory` (this browser's record), `show` (the write layer: `setVisible`,
+  `finder()`, `classic(on)`, `link(page)` (a page's web link), `memory` (this browser's record), `show` (the write layer: `setVisible`,
   `showPage`, `showFile`, `undoReveal`, …).
 
 ## Development

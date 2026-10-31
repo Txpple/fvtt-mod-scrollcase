@@ -81,6 +81,9 @@
       "matching": "{n} matching “{q}”",
       "matchingFiles": "{pages}, plus {files} not in a journal, matching “{q}”"
     },
+    "link": {
+      "unavailable": "The linked page is not one you can open."
+    },
     "export": {
       "hint": "Export the cards in view as a JSON file (their text, no pictures)",
       "done": "{name} saved: {n} entries.",
@@ -179,7 +182,8 @@
       "shownLine": "{when} · to {to}",
       "notShown": "Not shown from this browser",
       "openJournal": "Open in journal",
-      "copyLink": "Copy link",
+      "copyLink": "Copy a web link: it opens this page in the game, after logging in, for anyone who can see it",
+      "copyRef": "Copy a link for Foundry's text (@UUID), to paste into a journal, a description or chat",
       "copied": "Link copied.",
       "look": "Look at it",
       "again": "Show again to {to}"

@@ -21,6 +21,7 @@ import {
   kindOf,
   matchWhy,
   normPath,
+  pageLink,
   pictureOf,
   plainText,
   prettyName,
@@ -268,6 +269,7 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
       pin: ScrollCaseWindow.#onPin,
       openJournal: ScrollCaseWindow.#onOpenJournal,
       copyLink: ScrollCaseWindow.#onCopyLink,
+      copyRef: ScrollCaseWindow.#onCopyRef,
       keep: ScrollCaseWindow.#onKeep,
       undo: ScrollCaseWindow.#onUndo,
       dismissReveal: ScrollCaseWindow.#onDismissReveal,
@@ -1070,16 +1072,16 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
     else if (file) show.openPicture(file);
   }
 
-  static async #onCopyLink() {
+  /** A web link to the picked page: once logged in, it opens the page for whoever may see it (scrollcase.js). */
+  static #onCopyLink() {
     const page = fromUuidSync(this.#selected);
-    if (!isPage(page)) return;
-    const link = `@UUID[${page.uuid}]{${page.name}}`;
-    try {
-      await game.clipboard.copyPlainText(link);
-      ui.notifications.info(t("detail.copied"));
-    } catch {
-      ui.notifications.info(link);
-    }
+    if (isPage(page)) return copyText(pageLink(window.location.href, page.uuid));
+  }
+
+  /** The picked page as Foundry's own content link, for a journal, a description or a chat message. */
+  static #onCopyRef() {
+    const page = fromUuidSync(this.#selected);
+    if (isPage(page)) return copyText(`@UUID[${page.uuid}]{${page.name}}`);
   }
 
   static async #onKeep() {
@@ -1188,6 +1190,16 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
     this.#focus = null;
     this.#sticky = null;
     this.#returnTo = null;
+  }
+}
+
+/** Text to the clipboard; where the browser refuses, the text in a notice to copy by hand. */
+async function copyText(text) {
+  try {
+    await game.clipboard.copyPlainText(text);
+    ui.notifications.info(t("detail.copied"));
+  } catch {
+    ui.notifications.info(text);
   }
 }
 

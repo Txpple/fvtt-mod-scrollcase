@@ -11,7 +11,7 @@
  */
 
 import { log, MODULE_ID, setting, t } from "./common.js";
-import { kindOf } from "./decide/scrollcase.js";
+import { kindOf, LINK_PARAM, linkedPage, pageLink, withoutLink } from "./decide/scrollcase.js";
 import { Finder } from "./finder.js";
 import { ScrollCaseWindow, openClassicJournal } from "./library.js";
 import * as memory from "./memory.js";
@@ -193,6 +193,27 @@ function receiveShow(message, heard) {
   if (!game.user.isGM) heard(page.uuid);
 }
 
+/**
+ * A link to a page, `/game?page=<uuid>` (Foundry's login carries it through to the game): the page
+ * opens as a card would open it, only for a user who may see it; the parameter leaves the address
+ * bar either way, so a reload opens nothing.
+ */
+async function openLinked() {
+  if (!new URLSearchParams(window.location.search).has(LINK_PARAM)) return;
+  const uuid = linkedPage(window.location.search);
+  history.replaceState(history.state, "", withoutLink(window.location.href));
+  const page = uuid ? await fromUuid(uuid).catch(() => null) : null;
+  if (page?.documentName !== "JournalEntryPage" || !page.testUserPermission(game.user, "OBSERVER")) {
+    return void ui.notifications.warn(t("link.unavailable"));
+  }
+  if (setting("classic") && page.parent.testUserPermission(game.user, "OBSERVER")) show.openInJournal(page);
+  else show.openForReading(page);
+  if (!game.user.isGM) {
+    memory.noteSeen(page.uuid);
+    refresh();
+  }
+}
+
 Hooks.once("ready", () => {
   if (!setting("enabled")) return;
 
@@ -226,6 +247,8 @@ Hooks.once("ready", () => {
     log.error("listening for shown handouts failed", err);
   }
 
+  openLinked().catch(err => log.error("opening a linked page failed", err));
+
   // Foundry v14 bundles module CSS: if a rule of ours does not reach an element, load the sheet.
   try {
     const probe = document.createElement("div");
@@ -255,6 +278,7 @@ Hooks.once("ready", () => {
         if (on) openClassicJournal();
         else ScrollCaseWindow.open();
       },
+      link: page => pageLink(window.location.href, page.uuid),
       memory,
       show
     };

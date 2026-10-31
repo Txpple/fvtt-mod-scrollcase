@@ -323,3 +323,31 @@ export function exportOf({ world, view, type, search, at, entries }) {
     entries
   };
 }
+
+/** The query parameter a page link carries: `/game?page=<uuid>`. */
+export const LINK_PARAM = "page";
+
+/** A page's uuid, the only thing a link may name: a world page, or a compendium's. */
+const PAGE_UUID = /^(?:Compendium\.[\w-]+\.[\w-]+\.)?JournalEntry\.[A-Za-z0-9]{16}\.JournalEntryPage\.[A-Za-z0-9]{16}$/;
+
+/** A web link to a page: the game's own address, its search the page and nothing else. */
+export function pageLink(href, uuid) {
+  const url = new URL(href);
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set(LINK_PARAM, uuid);
+  return url.href;
+}
+
+/** The page an address's search names: its uuid, or null for none or anything not a page's. */
+export function linkedPage(search) {
+  const uuid = new URLSearchParams(search ?? "").get(LINK_PARAM);
+  return uuid && PAGE_UUID.test(uuid) ? uuid : null;
+}
+
+/** The address without the link's parameter (the rest kept), so a reload opens nothing again. */
+export function withoutLink(href) {
+  const url = new URL(href);
+  url.searchParams.delete(LINK_PARAM);
+  return url.href;
+}

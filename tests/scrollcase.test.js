@@ -9,10 +9,12 @@ import {
   folderOf,
   isImageFile,
   kindOf,
+  linkedPage,
   LEVEL,
   levelOf,
   matchWhy,
   normPath,
+  pageLink,
   pictureOf,
   plainText,
   prettyName,
@@ -23,7 +25,8 @@ import {
   stripSecrets,
   visibilityWrite,
   whoSees,
-  withoutImages
+  withoutImages,
+  withoutLink
 } from "../scripts/decide/scrollcase.js";
 
 const { INHERIT, NONE, LIMITED, OBSERVER, OWNER } = LEVEL;
@@ -306,5 +309,38 @@ describe("the export", () => {
     expect(
       exportOf({ world: "W", view: "v", type: "text", search: "map", at: "x", entries: [] }).search
     ).toBe("map");
+  });
+});
+
+describe("page links", () => {
+  const uuid = "JournalEntry.2JJQ4AXOd6nlYxCY.JournalEntryPage.RzASFDN5fBd2gHEl";
+
+  it("builds a link on the game's own address", () => {
+    expect(pageLink("https://example.test/game", uuid)).toBe(
+      `https://example.test/game?page=${uuid}`
+    );
+    expect(pageLink("https://example.test/prefix/game?x=1#chat", uuid)).toBe(
+      `https://example.test/prefix/game?page=${uuid}`
+    );
+  });
+
+  it("reads a page's uuid from the search, and nothing else", () => {
+    expect(linkedPage(`?page=${uuid}`)).toBe(uuid);
+    expect(linkedPage(`?page=Compendium.world.lore.${uuid}`)).toBe(`Compendium.world.lore.${uuid}`);
+    expect(linkedPage("?page=Actor.2JJQ4AXOd6nlYxCY")).toBeNull();
+    expect(linkedPage(`?page=${uuid}.Extra`)).toBeNull();
+    expect(linkedPage("?other=1")).toBeNull();
+    expect(linkedPage("")).toBeNull();
+  });
+
+  it("round-trips a link", () => {
+    expect(linkedPage(new URL(pageLink("https://example.test/game", uuid)).search)).toBe(uuid);
+  });
+
+  it("takes the parameter out of the address, keeping the rest", () => {
+    expect(withoutLink(`https://example.test/game?page=${uuid}`)).toBe("https://example.test/game");
+    expect(withoutLink(`https://example.test/game?a=1&page=${uuid}#x`)).toBe(
+      "https://example.test/game?a=1#x"
+    );
   });
 });
