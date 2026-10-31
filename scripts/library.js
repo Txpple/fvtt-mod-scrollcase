@@ -386,10 +386,6 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
         return !card.loose && !who.none;
       case "gm":
         return !card.loose && who.none;
-      case "recent":
-        return !!memory.lastShown(card.key);
-      case "pinned":
-        return memory.isPinned(card.key);
       case "loose":
         return gm && card.loose;
       case "unseen":
@@ -429,8 +425,9 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
       });
     }
 
-    // A player's rail is All, then New: a player cannot pin, and what the GM shows them opens on their screen.
-    const viewIds = gm ? ["all", "visible", "gm", "recent", "pinned", "loose"] : ["all", "unseen"];
+    // The rail: who can see a page for the GM, All then New for a player. Pins and what was shown live in
+    // the finder (its empty list), not on the rail.
+    const viewIds = gm ? ["all", "visible", "gm", "loose"] : ["all", "unseen"];
     if (!this.#view || !this.#validView(this.#view, viewIds)) this.#view = "all";
     const view = this.#view;
     const inView = c => c.key === this.#sticky || this.#inViewOf(c, view, seeing.get(c.key));
@@ -439,12 +436,6 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
     const fits = c => this.#inViewOf(c, view, seeing.get(c.key));
     const typeCount = Object.fromEntries(TYPES.map(k => [k, list.filter(c => fits(c) && this.#ofType(c, k)).length]));
     list = list.filter(c => this.#ofType(c, this.#type));
-    const orderBy = keys => {
-      const order = new Map(keys.map((k, i) => [k, i]));
-      list.sort((a, b) => (order.get(a.key) ?? 1e9) - (order.get(b.key) ?? 1e9));
-    };
-    if (view === "recent") orderBy(memory.load().recent.map(r => r.key));
-    if (view === "pinned") orderBy(memory.load().pins);
 
     // Every card's search fields; in All, the files are drawn too but show only for a search.
     this.#fields = new Map(all.map(c => [c.key, searchFields(c)]));
@@ -465,8 +456,7 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
       id,
       label: t(`view.${id}`),
       n: all.filter(c => this.#inViewOf(c, id, seeing.get(c.key))).length,
-      on: view === id,
-      drop: gm && id === "pinned" ? "pinned" : null
+      on: view === id
     }));
     context.folders = this.#railJournals(pages, view);
     context.heading = this.#heading(view);
@@ -851,11 +841,10 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
     }
   }
 
-  /** Whether the card being dragged can land on this row: pins take anything, a section only its own journal's pages. */
+  /** Whether the card being dragged can land on this row: a section takes only its own journal's pages. */
   #accepts(where) {
     const d = ScrollCaseWindow.#dragging;
     if (!d) return false;
-    if (where.drop === "pinned") return true;
     if (d.loose || d.entry !== where.entry) return false;
     if (where.drop === "cat") return d.category !== where.cat;
     return where.drop === "journal" && !!d.category;
@@ -863,11 +852,6 @@ export class ScrollCaseWindow extends HandlebarsApplicationMixin(ApplicationV2) 
 
   async #dropped(d, where) {
     try {
-      if (where.drop === "pinned") {
-        if (memory.isPinned(d.key)) ui.notifications.info(t("drop.alreadyPinned"));
-        else memory.togglePin(d.key);
-        return this.render();
-      }
       const page = fromUuidSync(d.key);
       if (!isPage(page)) return;
       await show.setSection(page, where.drop === "cat" ? where.cat : null);

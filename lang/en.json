@@ -68,8 +68,6 @@
       "all": "All",
       "visible": "Visible to players",
       "gm": "GM only",
-      "recent": "Recently shown",
-      "pinned": "Pinned",
       "loose": "Not in a journal",
       "unseen": "New"
     },
@@ -153,8 +151,6 @@
         "all": "This world has no journal pages yet.",
         "visible": "No page is visible to the players yet. Show one, or light a player under Players can see.",
         "gm": "Every page is visible to the players.",
-        "recent": "Nothing shown from this browser yet.",
-        "pinned": "Nothing pinned. Drag a card here, or press Pin in its panel.",
         "loose": "Every picture in the asset folders is in a journal.",
         "journal": "No pages here."
       },
@@ -222,7 +218,6 @@
       "nobody": "Pick at least one player, or Everyone."
     },
     "drop": {
-      "alreadyPinned": "Already pinned.",
       "filed": "{name} filed under {section}.",
       "unfiled": "{name} taken out of its section."
     },

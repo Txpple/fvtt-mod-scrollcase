@@ -25,7 +25,7 @@
     <nav class="hdt-rail" aria-label="{{localize 'fvtt-mod-scrollcase.rail.label'}}">
       <div class="hdt-key">{{localize "fvtt-mod-scrollcase.rail.handouts"}}</div>
       {{#each views}}
-      <button type="button" class="hdt-row {{#if on}}on{{/if}}" data-action="view" data-view="{{id}}" {{#if drop}}data-drop="{{drop}}"{{/if}} aria-current="{{#if on}}true{{else}}false{{/if}}">
+      <button type="button" class="hdt-row {{#if on}}on{{/if}}" data-action="view" data-view="{{id}}" aria-current="{{#if on}}true{{else}}false{{/if}}">
         <span class="n">{{label}}</span><small>{{n}}</small>
       </button>
       {{/each}}

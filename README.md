@@ -33,8 +33,9 @@ player (or you) the stock journal back with one click.
   The chevron beside it opens the options: everyone or chosen players, keep it visible or show it just once,
   the title and caption, or only the picture of a text page (a monster's portrait without its stat block).
 - **Organise with what Foundry already has.** The rail lists your journals by folder, with their sections
-  (Foundry's own page categories). Drag a card onto a section to file it there; pin cards for next session's
-  shortlist. *Visible to players*, *GM only*, *Recently shown* and *Pinned* views sit at the top.
+  (Foundry's own page categories). Drag a card onto a section to file it there. *All*, *Visible to players*,
+  *GM only* and *Not in a journal* sit at the top. Pin cards for next session's shortlist: the finder lists the
+  pins and what you showed last before you type.
 - **The detail panel.** Click a card for the picture large, where it lives, its section, who can see it (player
   by player), when you last showed it and *Show again* to the same players, *Open in journal* for editing, and
   two links to copy: Foundry's own `@UUID` link, to paste into a journal, a description or chat, and a web link.
